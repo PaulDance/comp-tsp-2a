@@ -16,22 +16,46 @@ Usage :  add "%include .." after first "%%" in /jflex file
 
 %{
 // Printing helpers 
-String WHERE() { return yyline+"/"+yycolumn+"("+yychar+")" ;} 
-void ECHO()    { System.out.print( yytext() );}
-void ECHO(String categorie) {
-   System.out.print(  "[" + categorie + ":" + yytext() + "]" );
+String WHERE() {
+	return yyline + "/" + yycolumn + "(" + yychar + ")";
 }
+
+void ECHO() {
+	System.out.print(yytext());
+}
+
+void ECHOLN() {
+	System.out.println(yytext());
+}
+
+void ECHO(String category) {
+	System.out.print("[" + category + ":" + yytext() + "]");
+}
+
+void ECHOLN(String category) {
+	System.out.println("[" + category + ":" + yytext() + "]");
+}
+
 void WARN(String msg) {
-   System.err.println( "< Warning at " + WHERE() + " : " + msg + " >"  );
+	System.err.println("< Warning at " + WHERE() + " : " + msg + " >");
 }
 
 // main() : read stdin or file args[0]
 public static void main(String[] args) throws java.io.IOException {
-   if (args.length > 0) System.setIn(new java.io.FileInputStream(args[0]));
-   Yylex lexer = new Yylex(new java.io.InputStreamReader(System.in));
-   while ( ! lexer.zzAtEOF )  lexer.next_token();
+	if (args.length > 0) {
+		System.setIn(new java.io.FileInputStream(args[0]));
+	}
+	
+	Yylex lexer = new Yylex(new java.io.InputStreamReader(System.in));
+	
+	while (!lexer.zzAtEOF) {
+		lexer.next_token();
+	}
 }
 
 // Avoid compilation warning "zzAtBOL unused"
-void blackhole(){ if (zzAtBOL) return; }
+void blackhole() {
+	if (zzAtBOL) return;
+}
+
 %}
