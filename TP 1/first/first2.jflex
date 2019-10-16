@@ -1,3 +1,6 @@
+// Basic non-typed C-like syntax specification.
+
+
 %%
 %include Jflex.include
 
@@ -9,15 +12,15 @@ REST		= [^]
 %%
 
 
-if | else | while | for 	{ ECHO("KW"); }
-[a-zA-Z_][a-zA-Z0-9_]*		{ ECHO("ID"); }
-\+ | \- | \* | \/			{ ECHO("OP"); }
-== | < | <= | > | >=		{ ECHO("CMP"); }
+if | else | while | for 	{ ECHO("KW"); }					// Language keywords
+[a-zA-Z_][a-zA-Z0-9_]*		{ ECHO("ID"); }					// Identificator
+\+ | \- | \* | \/			{ ECHO("OP"); }					// Arithmetic operators
+== | < | <= | > | >=		{ ECHO("CMP"); }				// Comparison operators
 \= | \+\+ | \-\- | \+= | \-=
-	| \*= | \/=				{ ECHO("AFF"); }
+	| \*= | \/=				{ ECHO("AFF"); }				// Assignment operators
 \( | \) | \[ | \] | \{ | \}
-	| ; | \,				{ ECHO("SEP"); }
-[0-9]*\.?[0-9]*				{ ECHO("NUM"); }
+	| ; | \,				{ ECHO("SEP"); }				// Separators
+[0-9]*\.?[0-9]*				{ ECHO("NUM"); }				// Integer and float numbers
 
 {WHITESPACE}+ | {COMMENT}
 	| {WHITESPACE}+{RETURN}	{ /* Ignored */ }
