@@ -1,0 +1,19 @@
+init with {: System.out.println("minicalculette :"); :}
+
+non terminal lignes , ligne ;
+non terminal Integer expr;
+
+terminal NL, PLUS;
+terminal Integer ENTIER;
+
+precedence left PLUS;
+
+lignes ::= /*mot vide */  {: :}
+       | lignes ligne NL  {: :}
+;
+ligne  ::= expr:e  {: System.out.println(" = " + e); :}
+       |   error   {: System.out.println(" = ??? "); :}
+;
+expr   ::= ENTIER:e            {: RESULT=e;     :}
+       |  expr:e1 PLUS expr:e2 {: RESULT=e1+e2; :}
+;

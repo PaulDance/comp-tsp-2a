@@ -1,0 +1,28 @@
+Complements eventuellement utile ?!
+----------------------------------
+
+ASTPrint.java
+   Utilitaire  : Impressions en tout sens d'AST
+   
+CupParseDebug.java
+   Custimization rapide d'uin main pour Jflex + Cup
+   Racourcis pour les modes debug
+
+CupParseMin.java
+   Code minimale pour un main() Jlex + CUP
+   Code pouvant etre inclus directement dane la spec Cup pour faire une classe parser executable
+   
+Jflex8bits.include
+   remplacement de JFlex.include pour lire l'entrée en ASCII 8 bits et non eb texte unicode ou autre. (Jflex Alone)
+
+IndentWriter.java
+   Classe utilitaire pour impresseion avec indentation et utilisation de StringBuilder. Ex : 
+   pw = new IndentWriter();
+   pw.println(...);
+   pw.undent();   pw.print(...);   pw.outdent();
+   pw.print(...);
+   System.our.println(pw);
+
+proto-minijava
+   Adaptation d'un projet CUP pour le projet Compilateur Minijava
+

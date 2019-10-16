@@ -1,0 +1,7 @@
+#!/bin/bash
+readlinkf() { perl -MCwd -le 'print Cwd::abs_path shift' "$1";}
+LIBCOMPIL=$(dirname $(dirname $(readlinkf $0 ) ) )
+
+echo "Creation lien ./lib -> ${LIBCOMPIL}/lib"
+ln -s ${LIBCOMPIL}/lib  ./lib
+

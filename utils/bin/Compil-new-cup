@@ -1,0 +1,19 @@
+#!/bin/bash
+if [ "$#" -ne 1 ] ;  then
+    echo "Usage: $0 dirextory-name" >&2
+    exit
+fi
+if [ -e $1 ] ;  then
+    echo "$1 existe !" >&2
+    exit
+fi
+
+readlinkf() { perl -MCwd -le 'print Cwd::abs_path shift' "$1";}
+LIBCOMPIL=$(dirname $(dirname $(readlinkf $0 ) ) )
+
+echo "Creation d'un projet Jflex+CUP dans le repertoire $1"
+/bin/cp -r ${LIBCOMPIL}/proto-cup  $1
+/bin/ln -s ${LIBCOMPIL}/lib        $1/lib
+
+echo "testing : cd $1; make ; make spec/sample; make run; "
+echo "  aussi : cd $1; ant -p; ant -DNAME=spec/sample; ant run; "
