@@ -1,0 +1,9 @@
+for (i = 0; i < 10; i++) {		// un commentaire
+	truc[i] = 2*i+1;
+	machin  = 12.3;
+	
+	if ( i >=5)
+		bidule += .1;
+	else
+		bidule -= 1.;
+}
