@@ -1,5 +1,5 @@
-*.java
-*.class
+Yylex.java
+Yylex.class
 *.out
 *.swp
 
