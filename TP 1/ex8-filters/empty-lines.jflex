@@ -1,21 +1,19 @@
-// Deletes empty lines from the input.
+// Deletes void, blank lines and blank line ends from the input.
 
 %%
 %include Jflex.include
 %caseless
 %%
 
-//VoidLine = \n\n
-//BlankLine = \n\s+\n
-//LineEndSpace = \s+\n
-//EmptySpace = {VoidLine} | {BlankLine} | {LineEndSpace}
 
-//%%
-
-(\R?\s*\R)++ {
-	System.out.println();
+^(\s*\R)+ {					// Void or blank consecutive lines.
+	// Deleted.
 }
 
-[^]+ {
+\s+$ {						// For line end blanks,
+	System.out.println();	// it seems necessary to output an empty line still.
+}
+
+[^] {
 	ECHO();
 }
