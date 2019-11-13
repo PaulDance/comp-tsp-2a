@@ -1,5 +1,7 @@
 Yylex.java
-Yylex.class
+sym.java
+parser.java
+*.class
 *.out
 *.swp
 
