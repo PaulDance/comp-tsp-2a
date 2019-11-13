@@ -1,0 +1,20 @@
+init with {:
+	System.out.println("Mon compilo C");
+:}
+
+action code {:
+	void DEBUG(String s) {
+		System.out.println(s);
+	}
+:}
+
+
+terminal TYPE, IDENT, SEMI, UNK;
+nonterminal programme, declaration;
+
+programme ::= /* vide */
+		| programme declaration {: :};
+
+declaration ::= TYPE IDENT SEMI {:
+	DEBUG("Variable");
+:};

@@ -1,0 +1,8 @@
+terminal TYPE, IDENT,  SEMI, UNK;
+nonterminal programme, declaration;
+
+programme ::= /* vide */
+	  |  programme declaration {: :}
+;
+declaration ::= TYPE IDENT SEMI {: :}
+;

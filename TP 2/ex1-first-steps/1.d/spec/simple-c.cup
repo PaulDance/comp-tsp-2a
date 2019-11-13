@@ -1,0 +1,73 @@
+init with {:
+	System.out.println("[*] Starting input parsing...");
+:}
+
+action code {:
+	void DEBUG(String s) {
+		System.out.println(s);
+	}
+:}
+
+
+terminal Type, Identifier, SemiColon, Unknown, OpenParenthesis,
+		CloseParenthesis, OpenBrace, CloseBrace, Equals,
+		Integer, Decimal, String, BinaryOperator; // Plus, Minus, Star, Slash;
+
+nonterminal Program, Declaration, VariableDeclaration, VariableAssignment,
+			VariableDeclarationAssignment, FunctionDeclaration, FunctionCall,
+			NameIdentification, Block, StatementSequence, Statement, Expression,
+			Literal, Number, BinaryOperation;
+
+precedence left BinaryOperator;
+
+
+
+Program ::= /* Epsilon */ | Program Declaration {: :};
+
+Declaration ::= VariableDeclaration | FunctionDeclaration;
+
+
+VariableDeclaration ::= NameIdentification SemiColon {:
+	DEBUG("> VariableDeclaration");
+:};
+
+VariableAssignment ::= Identifier Equals Expression SemiColon {:
+	DEBUG("> VariableAssignment");
+:};
+
+VariableDeclarationAssignment ::= NameIdentification Equals Expression SemiColon {:
+	DEBUG("> VariableDeclarationAssignment");
+:};
+
+NameIdentification ::= Type Identifier {:
+	DEBUG("> NameIdentification");
+:};
+
+
+FunctionDeclaration ::= NameIdentification OpenParenthesis
+						NameIdentification CloseParenthesis Block {:
+	DEBUG("> FunctionDeclaration");
+:};
+
+FunctionCall ::= Identifier OpenParenthesis Expression CloseParenthesis;
+
+
+Block ::= OpenBrace StatementSequence CloseBrace;
+
+StatementSequence ::= /* Epsilon */ | StatementSequence Statement;
+
+Statement ::= Block | SemiColon | Expression SemiColon
+				| VariableDeclaration | VariableAssignment
+				| VariableDeclarationAssignment;
+
+Expression ::= Literal | Identifier
+				| OpenParenthesis Expression CloseParenthesis
+				| FunctionCall | BinaryOperation;
+
+Literal ::= Number | String;
+
+Number ::= Integer | Decimal;
+
+BinaryOperation ::= Expression BinaryOperator Expression;
+
+// BinaryOperator ::= Plus | Minus | Star | Slash;
