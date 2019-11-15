@@ -2,7 +2,7 @@
 %include Jflex.include
 %include JflexCup.include
 
-Type = "int" | "long" | "char" | "float" | "double"
+Type = "void" | "int" | "long" | "char" | "float" | "double"
 Identifier = [_a-zA-Z] [_a-zA-Z0-9]*
 
 Ignored = \R | \s | {Comment}
@@ -10,14 +10,28 @@ Comment = {SimpleComment} | {MultiLineComment}
 SimpleComment = "//".*
 MultiLineComment = "/*" (\*+[^/*] | [^*])* \*+\/
 
-Integer = [0-9]+
-Decimal = {Integer}?\.{Integer}
+Integer = -?[0-9]+
+Decimal = {Integer}?\.[0-9]+
 String = \".*\"
-
-BinaryOperator = [-+*/]
 
 %%
 
+
+"if" {
+	return TOKEN(If);
+}
+
+"else" {
+	return TOKEN(Else);
+}
+
+"while" {
+	return TOKEN(While);
+}
+
+"for" {
+	return TOKEN(For);
+}
 
 {Type} {
 	return TOKEN(Type);
@@ -37,6 +51,10 @@ BinaryOperator = [-+*/]
 
 {String} {
 	return TOKEN(String);
+}
+
+"," {
+	return TOKEN(Comma);
 }
 
 ";" {
@@ -59,31 +77,70 @@ BinaryOperator = [-+*/]
 	return TOKEN(CloseBrace);
 }
 
+"!" {
+	return TOKEN(Not);
+}
+
 "=" {
 	return TOKEN(Equals);
 }
 
-{BinaryOperator} {
-	return TOKEN(BinaryOperator);
+"==" {
+	return TOKEN(DoubleEquals);
 }
 
-/*
-	"+" {
-		return TOKEN(Plus);
-	}
-	
-	"-" {
-		return TOKEN(Minus);
-	}
-	
-	"*" {
-		return TOKEN(Star);
-	}
-	
-	"/" {
-		return TOKEN(Slash);
-	}
-*/
+"!=" {
+	return TOKEN(NotEquals);
+}
+
+"+" {
+	return TOKEN(Plus);
+}
+
+"++" {
+	return TOKEN(DoublePlus);
+}
+
+"-" {
+	return TOKEN(Minus);
+}
+
+"--" {
+	return TOKEN(DoubleMinus);
+}
+
+"*" {
+	return TOKEN(Star);
+}
+
+"/" {
+	return TOKEN(Slash);
+}
+
+"<" {
+	return TOKEN(LessThan);
+}
+
+"<=" {
+	return TOKEN(LessThanOrEquals);
+}
+
+">" {
+	return TOKEN(GreaterThan);
+}
+
+">=" {
+	return TOKEN(GreaterThanOrEquals);
+}
+
+"&&" {
+	return TOKEN(And);
+}
+
+"||" {
+	return TOKEN(Or);
+}
+
 
 {Ignored} {
 	// Ignored.
@@ -91,5 +148,4 @@ BinaryOperator = [-+*/]
 
 [^] {
 	WARN("Unknown character : " + yytext());
-	return TOKEN(Unknown);
 }

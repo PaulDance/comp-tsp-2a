@@ -8,17 +8,26 @@ action code {:
 	}
 :}
 
-
-terminal Type, Identifier, SemiColon, Unknown, OpenParenthesis,
-		CloseParenthesis, OpenBrace, CloseBrace, Equals,
-		Integer, Decimal, String, BinaryOperator; // Plus, Minus, Star, Slash;
+terminal SemiColon, Comma, OpenParenthesis, CloseParenthesis, OpenBrace,
+		CloseBrace, Not, And, Or, Equals, DoubleEquals, NotEquals, Plus,
+		DoublePlus, Minus, DoubleMinus, Star, Slash, LessThan, LessThanOrEquals,
+		GreaterThan, GreaterThanOrEquals, If, Else, While, For;
+terminal Type, Identifier, Integer, Decimal, String;
 
 nonterminal Program, Declaration, VariableDeclaration, VariableAssignment,
-			VariableDeclarationAssignment, FunctionDeclaration, FunctionCall,
-			NameIdentification, Block, StatementSequence, Statement, Expression,
-			Literal, Number, BinaryOperation;
+			VariableAssignmentNoSemiColon, VariableAssignmentList,
+			VariableDeclarationAssignment, VariableDeclarationAssignmentNoSemiColon,
+			FunctionDeclaration, FunctionCall, NameIdentificationList,
+			NonEmptyNameIdentificationList, NameIdentification, Block,
+			StatementSequence, Statement, SimpleStatement, SimpleStatementNoSemiColon,
+			IfStatement, ElseOrNothingStatement, ElseStatement, WhileStatement,
+			ForStatement, NonEmptyExpressionList, ExpressionList, Expression,
+			Literal, Number, BinaryOperation, BinaryOperator, UnaryOperation,
+			UnaryOperationEnumeration;
 
-precedence left BinaryOperator;
+precedence left Plus, Minus, Star, Slash, DoubleEquals, NotEquals, And, Or,
+				LessThan, LessThanOrEquals, GreaterThan, GreaterThanOrEquals;
+precedence nonassoc Else;
 
 
 
@@ -31,13 +40,24 @@ VariableDeclaration ::= NameIdentification SemiColon {:
 	DEBUG("> VariableDeclaration");
 :};
 
-VariableAssignment ::= Identifier Equals Expression SemiColon {:
+VariableAssignment ::= VariableAssignmentNoSemiColon SemiColon {:
 	DEBUG("> VariableAssignment");
 :};
 
-VariableDeclarationAssignment ::= NameIdentification Equals Expression SemiColon {:
+VariableAssignmentNoSemiColon ::= VariableAssignmentList Expression;
+
+VariableAssignmentList ::= Identifier Equals | VariableAssignmentList Identifier Equals;
+
+VariableDeclarationAssignment ::= VariableDeclarationAssignmentNoSemiColon SemiColon {:
 	DEBUG("> VariableDeclarationAssignment");
 :};
+
+VariableDeclarationAssignmentNoSemiColon ::= NameIdentification Equals Expression;
+
+NameIdentificationList ::= /* Epsilon */ | NonEmptyNameIdentificationList;
+
+NonEmptyNameIdentificationList ::= NameIdentification
+				| NonEmptyNameIdentificationList Comma NameIdentification;
 
 NameIdentification ::= Type Identifier {:
 	DEBUG("> NameIdentification");
@@ -45,29 +65,71 @@ NameIdentification ::= Type Identifier {:
 
 
 FunctionDeclaration ::= NameIdentification OpenParenthesis
-						NameIdentification CloseParenthesis Block {:
+						NameIdentificationList CloseParenthesis Block {:
 	DEBUG("> FunctionDeclaration");
 :};
 
-FunctionCall ::= Identifier OpenParenthesis Expression CloseParenthesis;
+FunctionCall ::= Identifier OpenParenthesis ExpressionList CloseParenthesis {:
+	DEBUG("> FunctionCall");
+:};
 
 
 Block ::= OpenBrace StatementSequence CloseBrace;
 
 StatementSequence ::= /* Epsilon */ | StatementSequence Statement;
 
-Statement ::= Block | SemiColon | Expression SemiColon
+Statement ::= SimpleStatement | Block | IfStatement
+				| WhileStatement | ForStatement;
+
+SimpleStatement ::= SemiColon | Expression SemiColon
 				| VariableDeclaration | VariableAssignment
 				| VariableDeclarationAssignment;
 
+SimpleStatementNoSemiColon ::= /* Epsilon */ | Expression | NameIdentification
+								| VariableAssignmentNoSemiColon
+								| VariableDeclarationAssignmentNoSemiColon;
+
+IfStatement ::= If OpenParenthesis Expression CloseParenthesis Statement ElseOrNothingStatement {:
+	DEBUG("> IfStatement");
+:};
+
+ElseOrNothingStatement ::= ElseStatement | /* Epsilon */;
+
+ElseStatement ::= Else Statement {:
+	DEBUG("> ElseStatement");
+:};
+
+WhileStatement ::= While OpenParenthesis Expression CloseParenthesis Statement {:
+	DEBUG("> WhileStatement");
+:};
+
+ForStatement ::= For OpenParenthesis SimpleStatement SimpleStatement
+					SimpleStatementNoSemiColon CloseParenthesis Statement;
+
+ExpressionList ::= /* Epsilon */ | NonEmptyExpressionList;
+
+NonEmptyExpressionList ::= Expression | NonEmptyExpressionList Comma Expression;
+
 Expression ::= Literal | Identifier
 				| OpenParenthesis Expression CloseParenthesis
-				| FunctionCall | BinaryOperation;
+				| FunctionCall | BinaryOperation | UnaryOperation;
 
 Literal ::= Number | String;
 
 Number ::= Integer | Decimal;
 
-BinaryOperation ::= Expression BinaryOperator Expression;
+BinaryOperation ::= Expression BinaryOperator Expression {:
+	DEBUG("> BinaryOperation");
+:};
 
-// BinaryOperator ::= Plus | Minus | Star | Slash;
+BinaryOperator ::= Plus | Minus | Star | Slash | LessThan | GreaterThan
+					| LessThanOrEquals | GreaterThanOrEquals | DoubleEquals
+					| NotEquals | And | Or;
+
+UnaryOperation ::= UnaryOperationEnumeration {:
+	DEBUG("> UnaryOperation");
+:};
+
+UnaryOperationEnumeration ::= Not Expression | DoublePlus Identifier | DoubleMinus Identifier
+							| Identifier DoublePlus | Identifier DoubleMinus;
+
