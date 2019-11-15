@@ -30,11 +30,13 @@ precedence nonassoc Else;
 
 
 
+// Syntax axiom : a possibly empty program is a list of declarations.
 Program ::= /* Epsilon */ | Program Declaration;
 
 Declaration ::= VariableDeclaration | FunctionDeclaration;
 
 
+// Types of variable declarations.
 VariableDeclaration ::= VariableDeclarationNoSemiColon SemiColon {:
 	DEBUG("> VariableDeclaration");
 :};
@@ -63,6 +65,7 @@ NameIdentification ::= Type Identifier {:
 :};
 
 
+// Function declaration and call.
 FunctionDeclaration ::= NameIdentification OpenParenthesis
 						NameIdentificationList CloseParenthesis Block {:
 	DEBUG("> FunctionDeclaration");
@@ -73,6 +76,7 @@ FunctionCall ::= Identifier OpenParenthesis ExpressionList CloseParenthesis {:
 :};
 
 
+// Statements.
 Block ::= OpenBrace StatementSequence CloseBrace;
 
 StatementSequence ::= /* Epsilon */ | StatementSequence Statement;
@@ -104,6 +108,8 @@ WhileStatement ::= While OpenParenthesis Expression CloseParenthesis Statement {
 ForStatement ::= For OpenParenthesis SimpleStatement SimpleStatement
 					SimpleStatementNoSemiColon CloseParenthesis Statement;
 
+
+// Expressions.
 ExpressionList ::= /* Epsilon */ | NonEmptyExpressionList;
 
 NonEmptyExpressionList ::= Expression | NonEmptyExpressionList Comma Expression;
