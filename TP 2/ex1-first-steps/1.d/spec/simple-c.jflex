@@ -12,6 +12,7 @@ MultiLineComment = "/*" (\*+[^/*] | [^*])* \*+\/
 
 Integer = -?[0-9]+
 Decimal = {Integer}?\.[0-9]+
+Char = \'.\'
 String = \".*\"
 
 %%
@@ -47,6 +48,10 @@ String = \".*\"
 
 {Decimal} {
 	return TOKEN(Decimal);
+}
+
+{Char} {
+	return TOKEN(Char);
 }
 
 {String} {
