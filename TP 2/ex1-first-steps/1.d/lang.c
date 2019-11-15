@@ -1,5 +1,6 @@
 // Exemple de syntaxe C valide
-int i; long j; 
+int i; long j;
+int k = 0; 
 char cc;
 
 int fonct ( int i ) {}
@@ -18,6 +19,7 @@ void main() {
 	for (i=0; i<20; i++) i++;
 }
 
-// int ii, jj=12, kk=3*3+1;
-// float beta, pi=3.14;  char alpha='a';
-// int bid="null", a=3.14;		// Erreur sémantique, non syntaxique
+int ii, jj=12, kk=3*3+1;
+float beta, pi=3.14;
+char alpha='a';
+int bid="null", a=3.14;		// Erreur sémantique, non syntaxique
