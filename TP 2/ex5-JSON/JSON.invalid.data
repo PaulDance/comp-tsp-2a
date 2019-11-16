@@ -1,0 +1,18 @@
+
+//True
+
+//{1 [apple peach]}
+
+//""true""
+
+//{ true : "false"}
+
+//{ "true" : false ]
+
+{ "true" : [ 1 2 3 }]
+
+//{ "a" : "b" : "c"}
+
+//[ "a" , "b" , ]
+
+//[ , "a" ]
