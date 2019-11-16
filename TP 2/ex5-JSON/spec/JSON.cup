@@ -20,6 +20,26 @@ action code {:
 	 * allowed to be indented or not.
 	 */
 	private boolean indentNext = true;
+	/**
+	 * The `StringBuilder` used to store the pretty-print
+	 * result progressively in order to display it only
+	 * when the parsed input is syntaxically correct.
+	 */
+	private StringBuilder outputBuilder = new StringBuilder();
+	
+	/**
+	 * Returns the string meant to be the output.
+	 */
+	private String getOutput() {
+		return outputBuilder.toString();
+	}
+	
+	/**
+	 * Appends the given character to the output builder.
+	 */
+	private void out(char chr) {
+		outputBuilder.append(chr);
+	}
 	
 	/**
 	 * Simple shortcut to System.out.print(char).
@@ -29,10 +49,29 @@ action code {:
 	}
 	
 	/**
+	 * Calls `out(chr)` then `out('\n')`.
+	 */
+	private void outln(char chr) {
+		out(chr);
+		out('\n');
+	}
+	
+	/**
 	 * Simple shortcut to System.out.println(char).
 	 */
 	private void println(char chr) {
 		System.out.println(chr);
+	}
+	
+	/**
+	 * Adds all the objects present in the given array to
+	 * the output string builder in a sequence, without any
+	 * separator. No newline character is added at the end.
+	 */
+	private void out(Object... objectArray) {
+		for (Object object: objectArray) {
+			outputBuilder.append(object);
+		}
 	}
 	
 	/**
@@ -47,7 +86,15 @@ action code {:
 	}
 	
 	/**
-	 * Calls `print(Object...)` then adds a newline character.
+	 * Calls `out(objectArray)` then `out('\n')`.
+	 */
+	private void outln(Object... objectArray) {
+		out(objectArray);
+		out('\n');
+	}
+	
+	/**
+	 * Calls `print(objectArray)` then adds a newline character.
 	 */
 	private void println(Object... objectArray) {
 		print(objectArray);
@@ -70,7 +117,7 @@ action code {:
 	private void sameIndent() {
 		if (indentNext) {
 			for (int i = 0; i < currentIndent; i++) {
-				System.out.print('\t');
+				out('\t');
 			}
 		}
 		else {
@@ -121,11 +168,11 @@ nonterminal JSONtext, Value, Literal, Array, Object,							// Axiom and JSON ele
 
 /**
  * JSONtext is the axiom of the parser : one value only.
- * It is also used to define an end action : simply print
- * a newline.
+ * It is also used to define an end action : if the input
+ * is correct, then display the output.
  */
 start with JSONtext;
-JSONtext ::= Value									{: println(); :};
+JSONtext ::= Value									{: println(getOutput()); :};
 
 /**
  * A JS object can be three things : a constant (also known
@@ -139,28 +186,28 @@ Value ::= Literal | Array | Object;
  * without any further parsing required. Here, it can be:
  * `null`, `true`, `false`, a number or a character string.
  */
-Literal ::= Null									{: sameIndent(); print("null");		:}
-			| True									{: sameIndent(); print("true");		:}
-			| False									{: sameIndent(); print("false");	:}
-			| Number:number							{: sameIndent(); print(number);		:}
-			| String:string							{: sameIndent(); print(string);		:};
+Literal ::= Null									{: sameIndent(); out("null");	:}
+			| True									{: sameIndent(); out("true");	:}
+			| False									{: sameIndent(); out("false");	:}
+			| Number:number							{: sameIndent(); out(number);	:}
+			| String:string							{: sameIndent(); out(string);	:};
 
 
 /**
  * JS array object. It starts with a '[', then follows a
  * comma-separated list of values and it ends with ']'.
  */
-Array ::= OpenBracket /* Epsilon */ CloseBracket	{: sameIndent(); print("[]"); :}
-		| OpenBracket								{: sameIndent(); println('['); incIndent(); :}
+Array ::= OpenBracket /* Epsilon */ CloseBracket	{: sameIndent(); out("[]"); :}
+		| OpenBracket								{: sameIndent(); outln('['); incIndent(); :}
 			ArrayElements
-			CloseBracket							{: println(); lessIndent(); print(']'); :};
+			CloseBracket							{: outln(); lessIndent(); out(']'); :};
 
 /**
  * A non-empty comma-separated list of `Value` patterns.
  */
 ArrayElements ::= Value
 				| ArrayElements
-					Comma							{: println(','); :}
+					Comma							{: outln(','); :}
 					Value;
 
 
@@ -169,10 +216,10 @@ ArrayElements ::= Value
  * a comma-separated list of object members and ends with
  * '}'.
  */
-Object ::= OpenBrace /* Epsilon */ CloseBrace		{: sameIndent(); print("{}"); :}
-			| OpenBrace								{: sameIndent(); println('{'); incIndent(); :}
+Object ::= OpenBrace /* Epsilon */ CloseBrace		{: sameIndent(); out("{}"); :}
+			| OpenBrace								{: sameIndent(); outln('{'); incIndent(); :}
 				ObjectMembers
-				CloseBrace							{: println(); lessIndent(); print('}'); :};
+				CloseBrace							{: outln(); lessIndent(); out('}'); :};
 
 /**
  * A non-empty comma-separated list of `ObjectMember`
@@ -180,7 +227,7 @@ Object ::= OpenBrace /* Epsilon */ CloseBrace		{: sameIndent(); print("{}"); :}
  */
 ObjectMembers ::= ObjectMember
 				| ObjectMembers
-					Comma							{: println(','); :}
+					Comma							{: outln(','); :}
 					ObjectMember;
 
 /**
@@ -188,5 +235,5 @@ ObjectMembers ::= ObjectMember
  * and a `Value` pattern.
  */
 ObjectMember ::= String:string
-				Colon								{: sameIndent(); print(string, ": "); noIndentNext(); :}
+				Colon								{: sameIndent(); out(string, ": "); noIndentNext(); :}
 				Value;
