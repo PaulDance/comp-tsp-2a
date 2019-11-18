@@ -4,10 +4,13 @@
  * value. The result is displayed indented using tabulations.
  * 
  * In order to do that, each parsed pattern handles its
- * own indentation using `sameIndent()` and can modify the
- * global indentation level with `incIndent()` or `decIndent()`.
- * Other methods are implemented here in order to reduce the
- * code quantity necessary in the pattern recognition below.
+ * own indentation using {@link #sameIndent()} and can modify
+ * the global indentation level with {@link #incIndent()} or
+ * {@link #decIndent()}. Other methods are implemented here in
+ * order to reduce the code quantity necessary in the pattern
+ * recognition specification "JSON.cup".
+ * 
+ * @author Paul Mabileau &lt;paulmabileau@hotmail.fr&gt;
  */
 public class JsonPrettyPrintingUtils {
 	/**
@@ -21,14 +24,15 @@ public class JsonPrettyPrintingUtils {
 	 */
 	private boolean indentNext = true;
 	/**
-	 * The `StringBuilder` used to store the pretty-print
-	 * result progressively in order to display it only
-	 * when the parsed input is syntaxically correct.
+	 * The {@link StringBuilder} used to store the pretty-print
+	 * result progressively in order to display it only when
+	 * the parsed input is syntaxically correct.
 	 */
 	private StringBuilder outputBuilder = new StringBuilder();
 	
 	/**
-	 * Returns the string meant to be the output.
+	 * Finishes and returns the string meant to be the output.
+	 * @return The string that was previously built.
 	 */
 	public String getOutput() {
 		return this.outputBuilder.toString();
@@ -36,6 +40,7 @@ public class JsonPrettyPrintingUtils {
 	
 	/**
 	 * Appends the given character to the output builder.
+	 * @param chr A character to append to the output builder.
 	 */
 	public void out(char chr) {
 		this.outputBuilder.append(chr);
@@ -43,13 +48,18 @@ public class JsonPrettyPrintingUtils {
 	
 	/**
 	 * Simple shortcut to System.out.print(char).
+	 * @param chr A character to print on the standard output.
 	 */
 	public void print(char chr) {
 		System.out.print(chr);
 	}
 	
 	/**
-	 * Calls `out(chr)` then `out('\n')`.
+	 * Calls {@code out(chr)} then {@code out('\n')}.
+	 * 
+	 * @param chr A character to add at the end of the output,
+	 * 			followed by a newline.
+	 * @see #out(char)
 	 */
 	public void outln(char chr) {
 		this.out(chr);
@@ -58,6 +68,7 @@ public class JsonPrettyPrintingUtils {
 	
 	/**
 	 * Simple shortcut to System.out.println(char).
+	 * @param chr A character to println on the standard output.
 	 */
 	public void println(char chr) {
 		System.out.println(chr);
@@ -67,6 +78,8 @@ public class JsonPrettyPrintingUtils {
 	 * Adds all the objects present in the given array to
 	 * the output string builder in a sequence, without any
 	 * separator. No newline character is added at the end.
+	 * 
+	 * @param objectArray An array of objects given as arguments.
 	 */
 	public void out(Object... objectArray) {
 		for (Object object: objectArray) {
@@ -78,6 +91,8 @@ public class JsonPrettyPrintingUtils {
 	 * Prints all the objects present in the given array to
 	 * the standard output stream in a sequence, without any
 	 * separator. No newline character is added at the end.
+	 * 
+	 * @param objectArray An array of objects given as arguments.
 	 */
 	public void print(Object... objectArray) {
 		for (Object object: objectArray) {
@@ -86,7 +101,11 @@ public class JsonPrettyPrintingUtils {
 	}
 	
 	/**
-	 * Calls `out(objectArray)` then `out('\n')`.
+	 * Calls {@code out(objectArray)} then {@code out('\n')}.
+	 * 
+	 * @param objectArray An array of objects given as arguments.
+	 * @see #out(Object...)
+	 * @see #out(char)
 	 */
 	public void outln(Object... objectArray) {
 		this.out(objectArray);
@@ -94,7 +113,10 @@ public class JsonPrettyPrintingUtils {
 	}
 	
 	/**
-	 * Calls `print(objectArray)` then adds a newline character.
+	 * Calls {@code print(objectArray)} then adds a newline character.
+	 * 
+	 * @param objectArray An array of objects given as arguments.
+	 * @see #print(Object...)
 	 */
 	public void println(Object... objectArray) {
 		this.print(objectArray);
@@ -102,17 +124,19 @@ public class JsonPrettyPrintingUtils {
 	}
 	
 	/**
-	 * Disables identation just once.
+	 * Disables indentation just once. The next call to {@link
+	 * #sameIndent()} will result in adding nothing to the output.
+	 * The following one however will behave normally.
 	 */
 	public void noIndentNext() {
 		this.indentNext = false;
 	}
 	
 	/**
-	 * Prints enough tabulations to reach the current
-	 * indentation level. Deactivated if `noIndentNext`
-	 * was previously called, but then allows indentation
-	 * for the next parsed pattern.
+	 * Adds enough tabulations to reach the current indentation
+	 * level. Deactivated if {@link #noIndentNext()} was previously
+	 * called, but then allows indentation for the next parsed
+	 * pattern.
 	 */
 	public void sameIndent() {
 		if (this.indentNext) {
@@ -140,7 +164,7 @@ public class JsonPrettyPrintingUtils {
 	}
 	
 	/**
-	 * Calls `incIndent()` then `sameIndent()`.
+	 * Calls {@link #incIndent()} then {@link #sameIndent()}.
 	 */
 	public void moreIndent() {
 		this.incIndent();
@@ -148,7 +172,7 @@ public class JsonPrettyPrintingUtils {
 	}
 	
 	/**
-	 * Calls `decIndent()` then `sameIndent()`.
+	 * Calls {@link #decIndent()} then {@link #sameIndent()}.
 	 */
 	public void lessIndent() {
 		this.decIndent();
