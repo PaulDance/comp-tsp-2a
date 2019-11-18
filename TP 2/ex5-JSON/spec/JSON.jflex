@@ -80,5 +80,5 @@ MultiLineComment = "/*" (\*+[^/*] | [^*])* \*+\/
 }
 
 [^] {
-	WARN("Unknown character : " + yytext());
+	WARN("Unknown character: " + yytext());
 }

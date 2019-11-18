@@ -15,4 +15,4 @@ DIGIT = [0-9]
 "+"	  { return TOKEN(PLUS);  }
 {NL}	  { return TOKEN(NL);    }
 {IGNORE}  { }
-{ANY}	  { WARN("Unknown char.: " + yytext()); return TOKEN(error); }
+{ANY}	  { WARN("Unknown character: " + yytext()); return TOKEN(error); }

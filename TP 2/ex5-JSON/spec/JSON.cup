@@ -14,15 +14,15 @@ nonterminal JSONtext, Value, Literal, Array, Object,							// Axiom and JSON ele
 
 
 /**
- * JSONtext is the axiom of the parser : one value only.
- * It is also used to define an end action : if the input
+ * JSONtext is the axiom of the parser: one value only.
+ * It is also used to define an end action: if the input
  * is correct, then display the output.
  */
 start with JSONtext;
 JSONtext ::= Value									{: u.println(u.getOutput()); :};
 
 /**
- * A JS object can be three things : a constant (also known
+ * A JS object can be three things: a constant (also known
  * as literal), an array of objects or a compound object.
  */
 Value ::= Literal | Array | Object;
