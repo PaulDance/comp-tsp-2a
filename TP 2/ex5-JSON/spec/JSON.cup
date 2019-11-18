@@ -1,12 +1,12 @@
 
 action code {:
-	private JsonPrettyPrintingUtils u = new JsonPrettyPrintingUtils();
+	private JsonPrettyPrintingUtils u = new JsonPrettyPrintingUtils();			// See class documentation.
 :}
 
 
 terminal Colon, Comma, OpenBrace, CloseBrace, OpenBracket, CloseBracket,		// Single characters.
 		Null, True, False,														// Constant literals.
-		Number, String;															// Formatted literals.
+		Number, String;															// Format-respecting literals.
 
 nonterminal JSONtext, Value, Literal, Array, Object,							// Axiom and JSON elements.
 			ArrayElements, ObjectMember, ObjectMembers;							// Smaller constituents.
@@ -32,6 +32,11 @@ Value ::= Literal | Array | Object;
  * A literal value is an object that can be assigned to
  * without any further parsing required. Here, it can be:
  * `null`, `true`, `false`, a number or a character string.
+ * 
+ * The pretty-printing is handled thus: each literal has its
+ * own line, so it needs to reach the current indentation (or
+ * not depending on the context described by noIndentNext())
+ * and then display its value's represensation.
  */
 Literal ::= Null									{: u.sameIndent(); u.out("null");	:}
 			| True									{: u.sameIndent(); u.out("true");	:}
@@ -43,6 +48,14 @@ Literal ::= Null									{: u.sameIndent(); u.out("null");	:}
 /**
  * JS array object. It starts with a '[', then follows a
  * comma-separated list of values and it ends with ']'.
+ * 
+ * The pretty-printing is handled thus: the case where the
+ * array is empty is managed seperately in order not to add
+ * a newline between the square brackets; in other cases,
+ * the '[' is added at the current indentation followed by
+ * a newline, the indentation level is raised, the contents
+ * are displayed, a newline and then a ']' are added on a
+ * decreased indentation.
  */
 Array ::= OpenBracket /* Epsilon */ CloseBracket	{: u.sameIndent(); u.out("[]"); :}
 		| OpenBracket								{: u.sameIndent(); u.outln('['); u.incIndent(); :}
@@ -51,6 +64,9 @@ Array ::= OpenBracket /* Epsilon */ CloseBracket	{: u.sameIndent(); u.out("[]");
 
 /**
  * A non-empty comma-separated list of `Value` patterns.
+ * 
+ * The pretty-printing is handled thus: each value displays
+ * itself, only a comma and a newline are added between them.
  */
 ArrayElements ::= Value
 				| ArrayElements
@@ -60,8 +76,12 @@ ArrayElements ::= Value
 
 /**
  * A JS compound object: starts with a '{', then follows
- * a comma-separated list of object members and ends with
- * '}'.
+ * a comma-separated list of object members and ends with '}'.
+ * 
+ * The pretty-printing is handled thus: as for the arrays,
+ * the empty case is displayed directly and the content is
+ * surrounded in the same manner, with curly braces instead
+ * of square brackets.
  */
 Object ::= OpenBrace /* Epsilon */ CloseBrace		{: u.sameIndent(); u.out("{}"); :}
 			| OpenBrace								{: u.sameIndent(); u.outln('{'); u.incIndent(); :}
@@ -71,6 +91,8 @@ Object ::= OpenBrace /* Epsilon */ CloseBrace		{: u.sameIndent(); u.out("{}"); :
 /**
  * A non-empty comma-separated list of `ObjectMember`
  * patterns.
+ * 
+ * The pretty-printing is handled like ArrayElements.
  */
 ObjectMembers ::= ObjectMember
 				| ObjectMembers
@@ -80,6 +102,12 @@ ObjectMembers ::= ObjectMember
 /**
  * A JSON compound object member: a JSON string, a colon
  * and a `Value` pattern.
+ * 
+ * The pretty-printing is handled thus: the member is like
+ * a value in an array, so it reaches the current indentation,
+ * displays the member's identifier (quoted string), adds ": "
+ * and then disables indentation for the next token so that
+ * it can be displayed on the same line, right after the colon.
  */
 ObjectMember ::= String:string
 				Colon								{: u.sameIndent(); u.out(string, ": "); u.noIndentNext(); :}
