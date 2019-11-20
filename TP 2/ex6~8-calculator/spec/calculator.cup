@@ -1,0 +1,129 @@
+action code {:
+	Number eval(Number n1, char op, Number n2) {
+		if (n1 instanceof Integer) {
+			if (n2 instanceof Integer) {
+				return eval((Integer) n1, op, (Integer) n2);
+			}
+			else if (n2 instanceof Double) {
+				return eval((Integer) n1, op, (Double) n2);
+			}
+			else {
+				return null;
+			}
+		}
+		else if (n1 instanceof Double) {
+			if (n2 instanceof Integer) {
+				return eval((Double) n1, op, (Integer) n2);
+			}
+			else if (n2 instanceof Double) {
+				return eval((Double) n1, op, (Double) n2);
+			}
+			else {
+				return null;
+			}
+		}
+		else {
+			return null;
+		}
+	}
+	
+	Integer eval(Integer n1, char op, Integer n2) {
+		switch (op) {
+			case '+':
+				return n1 + n2;
+			case '-':
+				return n1 - n2;
+			case '*':
+				return n1 * n2;
+			case '/':
+				return n1 / n2;
+			case '%':
+				return n1 % n2;
+			default:
+				return null;
+		}
+	}
+	
+	Double eval(Integer n1, char op, Double n2) {
+		switch (op) {
+			case '+':
+				return n1 + n2;
+			case '-':
+				return n1 - n2;
+			case '*':
+				return n1 * n2;
+			case '/':
+				return n1 / n2;
+			default:
+				return null;
+		}
+	}
+	
+	Double eval(Double n1, char op, Integer n2) {
+		switch (op) {
+			case '+':
+				return n1 + n2;
+			case '-':
+				return n1 - n2;
+			case '*':
+				return n1 * n2;
+			case '/':
+				return n1 / n2;
+			default:
+				return null;
+		}
+	}
+	
+	Double eval(Double n1, char op, Double n2) {
+		switch (op) {
+			case '+':
+				return n1 + n2;
+			case '-':
+				return n1 - n2;
+			case '*':
+				return n1 * n2;
+			case '/':
+				return n1 / n2;
+			default:
+				return null;
+		}
+	}
+:}
+
+terminal String Newline, MinFunction, MaxFunction;
+terminal Character Plus, Minus, Times, Divide, Modulo, Comma,
+					OpenParenthesis, CloseParenthesis;
+
+terminal Integer PositiveInteger;
+terminal Double Decimal;
+
+nonterminal Number Number, Expression;
+nonterminal CalculatorInput;
+nonterminal Character BinaryOperator;
+
+precedence left Plus, Minus;
+precedence left Times, Divide, Modulo;
+
+
+start with CalculatorInput;
+CalculatorInput ::= /* Epsilon */
+				| CalculatorInput Newline						// Ignored
+				| CalculatorInput
+					Expression:n								{: System.out.println(n); :}
+					Newline;
+
+Expression ::= Number:n											{: RESULT = n; :}
+			| OpenParenthesis Expression:n CloseParenthesis		{: RESULT = n; :}
+			| Expression:n1 BinaryOperator:op Expression:n2		{: RESULT = eval(n1, op, n2); :};
+
+BinaryOperator ::= Plus:p										{: RESULT = p; :}
+				| Minus:m										{: RESULT = m; :}
+				| Times:t										{: RESULT = t; :}
+				| Divide:d										{: RESULT = d; :}
+				| Modulo:m										{: RESULT = m; :};
+
+FunctionCall ::= ;
+
+Number ::= PositiveInteger:i									{: RESULT = i; :}
+		| Decimal:d												{: RESULT = d; :};
+
