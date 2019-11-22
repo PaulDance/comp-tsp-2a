@@ -1,94 +1,3 @@
-action code {:
-	Number eval(Number n1, char op, Number n2) {
-		if (n1 instanceof Integer) {
-			if (n2 instanceof Integer) {
-				return eval((Integer) n1, op, (Integer) n2);
-			}
-			else if (n2 instanceof Double) {
-				return eval((Integer) n1, op, (Double) n2);
-			}
-			else {
-				return null;
-			}
-		}
-		else if (n1 instanceof Double) {
-			if (n2 instanceof Integer) {
-				return eval((Double) n1, op, (Integer) n2);
-			}
-			else if (n2 instanceof Double) {
-				return eval((Double) n1, op, (Double) n2);
-			}
-			else {
-				return null;
-			}
-		}
-		else {
-			return null;
-		}
-	}
-	
-	Integer eval(Integer n1, char op, Integer n2) {
-		switch (op) {
-			case '+':
-				return n1 + n2;
-			case '-':
-				return n1 - n2;
-			case '*':
-				return n1 * n2;
-			case '/':
-				return n1 / n2;
-			case '%':
-				return n1 % n2;
-			default:
-				return null;
-		}
-	}
-	
-	Double eval(Integer n1, char op, Double n2) {
-		switch (op) {
-			case '+':
-				return n1 + n2;
-			case '-':
-				return n1 - n2;
-			case '*':
-				return n1 * n2;
-			case '/':
-				return n1 / n2;
-			default:
-				return null;
-		}
-	}
-	
-	Double eval(Double n1, char op, Integer n2) {
-		switch (op) {
-			case '+':
-				return n1 + n2;
-			case '-':
-				return n1 - n2;
-			case '*':
-				return n1 * n2;
-			case '/':
-				return n1 / n2;
-			default:
-				return null;
-		}
-	}
-	
-	Double eval(Double n1, char op, Double n2) {
-		switch (op) {
-			case '+':
-				return n1 + n2;
-			case '-':
-				return n1 - n2;
-			case '*':
-				return n1 * n2;
-			case '/':
-				return n1 / n2;
-			default:
-				return null;
-		}
-	}
-:}
 
 terminal String Newline, MinFunction, MaxFunction;
 terminal Character Plus, Minus, Times, Divide, Modulo, Comma,
@@ -97,8 +6,8 @@ terminal Character Plus, Minus, Times, Divide, Modulo, Comma,
 terminal Integer PositiveInteger;
 terminal Double Decimal;
 
-nonterminal Number Number, Expression;
-nonterminal CalculatorInput;
+nonterminal Double Number, Expression, FunctionCall;
+nonterminal CalculatorInput, ExpressionList, NonEmptyExpressionList;
 nonterminal Character BinaryOperator;
 
 precedence left Plus, Minus;
@@ -112,9 +21,13 @@ CalculatorInput ::= /* Epsilon */
 					Expression:n								{: System.out.println(n); :}
 					Newline;
 
-Expression ::= Number:n											{: RESULT = n; :}
-			| OpenParenthesis Expression:n CloseParenthesis		{: RESULT = n; :}
-			| Expression:n1 BinaryOperator:op Expression:n2		{: RESULT = eval(n1, op, n2); :};
+Expression ::= Number:n											{: RESULT = new Literal(n); :}
+			| OpenParenthesis Expression:expr CloseParenthesis	{: RESULT = expr; :}
+			| FunctionCall:fc									{: RESULT = fc; :}
+			| Expression:n1 BinaryOperator:op Expression:n2		{: RESULT =  :};
+
+Number ::= PositiveInteger:i									{: RESULT = new Double(i); :}
+		| Decimal:d												{: RESULT = d; :};
 
 BinaryOperator ::= Plus:p										{: RESULT = p; :}
 				| Minus:m										{: RESULT = m; :}
@@ -124,6 +37,11 @@ BinaryOperator ::= Plus:p										{: RESULT = p; :}
 
 FunctionCall ::= ;
 
-Number ::= PositiveInteger:i									{: RESULT = i; :}
-		| Decimal:d												{: RESULT = d; :};
+ExpressionList ::= /* Epsilon */ | NonEmptyExpressionList;
+
+NonEmptyExpressionList ::= Expression
+						| NonEmptyExpressionList
+							Comma
+							Expression;
+
 
