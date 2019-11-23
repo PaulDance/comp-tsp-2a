@@ -1,6 +1,11 @@
+package calculator;
+
+import ast.ASTNode;
+import ast.ASTVisitor;
+
 
 public abstract class Expression extends ASTNode {
-	public Expression(ASTNode... fils) {
+	public Expression(Expression... fils) {
 		super(fils);
 	}
 	

@@ -1,3 +1,16 @@
+import java.util.Deque;
+import java.util.ArrayDeque;
+import java.util.List;
+import java.util.ArrayList;
+
+import calculator.*;
+import calculator.operations.*;
+import calculator.functions.*;
+
+action code {:
+	Deque<List<Expression>> callStack = new ArrayDeque<List<Expression>>();;
+:}
+
 
 terminal String Newline, MinFunction, MaxFunction;
 terminal Character Plus, Minus, Times, Divide, Modulo, Comma,
@@ -6,9 +19,10 @@ terminal Character Plus, Minus, Times, Divide, Modulo, Comma,
 terminal Integer PositiveInteger;
 terminal Double Decimal;
 
-nonterminal Double Number, Expression, FunctionCall;
-nonterminal CalculatorInput, ExpressionList, NonEmptyExpressionList;
-nonterminal Character BinaryOperator;
+nonterminal Double Number;
+nonterminal Expression Expression, FunctionCall, BinaryOperation;
+nonterminal List<Expression> /*ExpressionList,*/ NonEmptyExpressionList;
+nonterminal CalculatorInput, NonEmptyExpressionListConstructor;
 
 precedence left Plus, Minus;
 precedence left Times, Divide, Modulo;
@@ -18,30 +32,42 @@ start with CalculatorInput;
 CalculatorInput ::= /* Epsilon */
 				| CalculatorInput Newline						// Ignored
 				| CalculatorInput
-					Expression:n								{: System.out.println(n); :}
+					Expression:expr								{: System.out.println(expr.evaluate()); :}
 					Newline;
 
 Expression ::= Number:n											{: RESULT = new Literal(n); :}
 			| OpenParenthesis Expression:expr CloseParenthesis	{: RESULT = expr; :}
 			| FunctionCall:fc									{: RESULT = fc; :}
-			| Expression:n1 BinaryOperator:op Expression:n2		{: RESULT =  :};
+			| BinaryOperation:bo								{: RESULT = bo; :};
 
 Number ::= PositiveInteger:i									{: RESULT = new Double(i); :}
 		| Decimal:d												{: RESULT = d; :};
 
-BinaryOperator ::= Plus:p										{: RESULT = p; :}
-				| Minus:m										{: RESULT = m; :}
-				| Times:t										{: RESULT = t; :}
-				| Divide:d										{: RESULT = d; :}
-				| Modulo:m										{: RESULT = m; :};
+BinaryOperation ::= Expression:op1 Plus Expression:op2			{: RESULT = new AdditionOperation(op1, op2); :}
+				| Expression:op1 Minus Expression:op2			{: RESULT = new SubstractionOperation(op1, op2); :}
+				| Expression:op1 Times Expression:op2			{: RESULT = new MultiplicationOperation(op1, op2); :}
+				| Expression:op1 Divide Expression:op2			{: RESULT = new DivisionOperation(op1, op2); :}
+				| Expression:op1 Modulo Expression:op2			{: RESULT = new ModuloOperation(op1, op2); :};
 
-FunctionCall ::= ;
 
-ExpressionList ::= /* Epsilon */ | NonEmptyExpressionList;
+FunctionCall ::= MinFunction
+					OpenParenthesis
+					NonEmptyExpressionList:exprList
+					CloseParenthesis							{: RESULT = new MinFunctionCall(exprList); :}
+				| MaxFunction
+					OpenParenthesis
+					NonEmptyExpressionList:exprList
+					CloseParenthesis							{: RESULT = new MaxFunctionCall(exprList); :};
 
-NonEmptyExpressionList ::= Expression
-						| NonEmptyExpressionList
-							Comma
-							Expression;
+//ExpressionList ::= /* Epsilon */								{: RESULT = new ArrayList<Expression>(); :}
+//				| NonEmptyExpressionList:exprList				{: RESULT = exprList; :};
+
+NonEmptyExpressionList ::= /* List start */						{: callStack.addLast(new ArrayList<Expression>()); :}
+							NonEmptyExpressionListConstructor	{: RESULT = callStack.removeLast(); :};
+
+NonEmptyExpressionListConstructor ::= Expression:expr			{: callStack.peekLast().add(expr); :}
+									| NonEmptyExpressionListConstructor
+										Comma
+										Expression:expr			{: callStack.peekLast().add(expr); :};
 
 

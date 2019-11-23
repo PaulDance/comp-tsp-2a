@@ -1,7 +1,12 @@
-public class MinusOperation extends Expression {
+package calculator.operations;
+
+import calculator.Expression;
+
+
+public class AdditionOperation extends Expression {
 	private final Expression op1, op2;
 	
-	public MinusOperation(Expression op1, Expression op2) {
+	public AdditionOperation(Expression op1, Expression op2) {
 		super(op1, op2);
 		this.op1 = op1;
 		this.op2 = op2;

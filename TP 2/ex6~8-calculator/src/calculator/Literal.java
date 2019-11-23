@@ -1,3 +1,5 @@
+package calculator;
+
 
 public class Literal extends Expression {
 	private final Double value;
