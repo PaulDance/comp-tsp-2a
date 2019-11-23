@@ -49,12 +49,32 @@ FractionalPart = \.[0-9]+
 	return TOKEN(Comma, yycharat(0));
 }
 
+"**" {
+	return TOKEN(Power);
+}
+
+"abs" {
+	return TOKEN(AbsFunction);
+}
+
 "min" {
 	return TOKEN(MinFunction);
 }
 
 "max" {
 	return TOKEN(MaxFunction);
+}
+
+"sqrt" {
+	return TOKEN(SqrtFunction);
+}
+
+"cbrt" {
+	return TOKEN(CbrtFunction);
+}
+
+"pow" {
+	return TOKEN(PowFunction);
 }
 
 {Decimal} {

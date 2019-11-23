@@ -6,8 +6,8 @@ import calculator.Expression;
 
 
 public class MinFunctionCall extends FunctionCall {
-	public MinFunctionCall(List<Expression> argsList) {
-		super(argsList);
+	public MinFunctionCall(final List<Expression> argsList) throws IllegalArgumentException {
+		super(argsList, FunctionCall.AT_LEAST_ONE_ARG);
 	}
 	
 	@Override
@@ -23,5 +23,10 @@ public class MinFunctionCall extends FunctionCall {
 		}
 		
 		return min;
+	}
+	
+	@Override
+	public String getName() {
+		return "min";
 	}
 }

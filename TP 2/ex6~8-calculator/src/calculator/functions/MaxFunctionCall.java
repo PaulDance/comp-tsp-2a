@@ -6,8 +6,8 @@ import calculator.Expression;
 
 
 public class MaxFunctionCall extends FunctionCall {
-	public MaxFunctionCall(List<Expression> argsList) {
-		super(argsList);
+	public MaxFunctionCall(final List<Expression> argsList) throws IllegalArgumentException {
+		super(argsList, FunctionCall.AT_LEAST_ONE_ARG);
 	}
 	
 	@Override
@@ -23,5 +23,10 @@ public class MaxFunctionCall extends FunctionCall {
 		}
 		
 		return max;
+	}
+	
+	@Override
+	public String getName() {
+		return "max";
 	}
 }

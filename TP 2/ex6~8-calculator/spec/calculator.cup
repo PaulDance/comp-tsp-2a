@@ -8,24 +8,25 @@ import calculator.operations.*;
 import calculator.functions.*;
 
 action code {:
-	Deque<List<Expression>> callStack = new ArrayDeque<List<Expression>>();;
+	Deque<List<Expression>> callStack = new ArrayDeque<List<Expression>>();
 :}
 
 
-terminal String Newline, MinFunction, MaxFunction;
-terminal Character Plus, Minus, Times, Divide, Modulo, Comma,
-					OpenParenthesis, CloseParenthesis;
+terminal String Newline, MinFunction, MaxFunction, SqrtFunction,
+				CbrtFunction, PowFunction, Power, AbsFunction;
+terminal Character Plus, Minus, Times, Divide, Modulo,
+					Comma, OpenParenthesis, CloseParenthesis;
 
 terminal Integer PositiveInteger;
 terminal Double Decimal;
 
 nonterminal Double Number;
 nonterminal Expression Expression, FunctionCall, BinaryOperation;
-nonterminal List<Expression> /*ExpressionList,*/ NonEmptyExpressionList;
+nonterminal List<Expression> ExpressionList, NonEmptyExpressionList;
 nonterminal CalculatorInput, NonEmptyExpressionListConstructor;
 
 precedence left Plus, Minus;
-precedence left Times, Divide, Modulo;
+precedence left Times, Divide, Modulo, Power;
 
 
 start with CalculatorInput;
@@ -47,20 +48,38 @@ BinaryOperation ::= Expression:op1 Plus Expression:op2			{: RESULT = new Additio
 				| Expression:op1 Minus Expression:op2			{: RESULT = new SubstractionOperation(op1, op2); :}
 				| Expression:op1 Times Expression:op2			{: RESULT = new MultiplicationOperation(op1, op2); :}
 				| Expression:op1 Divide Expression:op2			{: RESULT = new DivisionOperation(op1, op2); :}
-				| Expression:op1 Modulo Expression:op2			{: RESULT = new ModuloOperation(op1, op2); :};
+				| Expression:op1 Modulo Expression:op2			{: RESULT = new ModuloOperation(op1, op2); :}
+				| Expression:op1 Power Expression:op2			{: RESULT = new PowerOperation(op1, op2); :};
 
 
 FunctionCall ::= MinFunction
 					OpenParenthesis
-					NonEmptyExpressionList:exprList
+					ExpressionList:exprList
 					CloseParenthesis							{: RESULT = new MinFunctionCall(exprList); :}
 				| MaxFunction
 					OpenParenthesis
-					NonEmptyExpressionList:exprList
-					CloseParenthesis							{: RESULT = new MaxFunctionCall(exprList); :};
+					ExpressionList:exprList
+					CloseParenthesis							{: RESULT = new MaxFunctionCall(exprList); :}
+				| AbsFunction
+					OpenParenthesis
+					ExpressionList:exprList
+					CloseParenthesis							{: RESULT = new AbsFunctionCall(exprList); :}
+				| SqrtFunction
+					OpenParenthesis
+					ExpressionList:exprList
+					CloseParenthesis							{: RESULT = new SqrtFunctionCall(exprList); :}
+				| CbrtFunction
+					OpenParenthesis
+					ExpressionList:exprList
+					CloseParenthesis							{: RESULT = new CbrtFunctionCall(exprList); :}
+				| PowFunction
+					OpenParenthesis
+					ExpressionList:exprList
+					CloseParenthesis							{: RESULT = new PowFunctionCall(exprList); :}
+				;
 
-//ExpressionList ::= /* Epsilon */								{: RESULT = new ArrayList<Expression>(); :}
-//				| NonEmptyExpressionList:exprList				{: RESULT = exprList; :};
+ExpressionList ::= /* Epsilon */								{: RESULT = new ArrayList<Expression>(); :}
+				| NonEmptyExpressionList:exprList				{: RESULT = exprList; :};
 
 NonEmptyExpressionList ::= /* List start */						{: callStack.addLast(new ArrayList<Expression>()); :}
 							NonEmptyExpressionListConstructor	{: RESULT = callStack.removeLast(); :};
