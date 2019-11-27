@@ -1,0 +1,18 @@
+---Utilisation des resgisters MIPS---
+$gp     Réference aux variables globales.
+        Valeur fixe
+$fp     Frame Pointer : Réference aux variables locales de méthode
+        Positionné par appelant,
+        Sauvegardé par appelé
+$sp     La pile ...
+$ra     Adressse de retour
+        Sauvegardé par appelé
+$a0-$a4 Les 4 premiers arguments de méthode.
+        $a0=this
+        Sauvegardés par appelant
+$v0 $v1 Libres pour calculs temporaires (dans instruction IR)
+        Non sauvegardés
+$s0-$s7 Non utilisés, mais disponibles si besoin 
+        Sauvegardés par appelé
+$t0-$t9 Non utilisśs, mais disponibles su besoin
+        Sauvegardés par appelant

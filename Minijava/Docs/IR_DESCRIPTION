@@ -1,0 +1,42 @@
+==>  IR.java <==
+  List<IRQuadruple> program;  // Programe intermédiaire
+  Scope rootScope;            // Table des Symbole de l'AST
+  List<IRTempo> tempos;       // Symboles IR : tempo
+  List<IRConst> consts;       // Symboles IT : const
+  List<IRLabel> labels;       // Symboles UR : label
+  IRVar newTemp(String scope) // Variable Tempo (scope = current methode)
+  IRVar newConst(int value)   // Variable Const
+  IRVar newLabel(String name) // Variable Label
+  IRVar newLabel()            // Variable label (nom unique)
+==> IRQuadruple.java : abstract for Q*.java <==
+/** Instruction générique : "result = arg1 op arg2" */
+  main.OPER op;
+  IRVar arg1;
+  IRVar arg2;
+  IRVar result;
+==> Q*.java <==
+QAssign(OPER op, IRVar arg1, IRVar arg2, IRVar result) 
+                       // result = arg1 op arg2
+QAssignArrayFrom(IRVar arg1, IRVar arg2, IRVar result) 
+                       // result = arg1[arg2] 
+QAssignArrayTo(IRVar arg1, IRVar arg2, IRVar result) 
+                       // result[arg2] = arg1
+QAssignUnary(OPER op, IRVar arg1, IRVar result) 
+                       // result = op arg1
+QCall(IRVar arg1, IRVar arg2, IRVar result) 
+                       // result = call arg1 [nbParam=arg2]
+QCopy(IRVar arg1, IRVar result)
+                       // result = arg1
+QJump(IRVar arg1)      // Jump arg1 
+QJumpCond(IRVar arg1, IRVar arg2) 
+                       // Jump arg1 IfNot arg2
+QLabel(IRVar arg1)     // Label arg1
+QLabelMeth(IRVar arg1) // Label arg1 /* pour appel de méthode */
+QLength(IRVar arg1, IRVar result)
+                       // result = length(arg1)
+QNew(IRVar arg1, IRVar result)
+                       // result = new arg1
+QNewArray(IRVar arg1, IRVar arg2, IRVar result)
+                       // result = new arg1 [Size=arg2]
+QParam(IRVar arg1)     // Param arg1 /* avant QCall */
+QReturn(IRVar arg1)    // Return arg1 

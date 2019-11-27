@@ -1,0 +1,45 @@
+// From book "Modern Compilation in Java"
+BinarySearch.java  Recherche sur Tableau
+BinaryTree.java    Structure d'arbre de recherche
+BinaryVisitor.java BinaryTree avec Visiteur (et polymorphisme)
+BubbleSort.java    Tri iteratif sur tableau
+Factorial.java     Appel Revursif
+LinearSearch.java  Recherche sur Tableau
+LinkedList.java    Structure de liste Chainée, ( avec polymorphisme )
+QuickSort.java     Tri recursif sur tableau
+
+// Basic incremental MileStone :
+Test101.java  hello 42
+Test102.java  hello 6 * 7 
+Test103.java  classes et méthodes (simple)
+Test104.java  classes et méthodes (complet)
+Test105.java  expresions
+Test106.java  instructions
+Test109.java  Tableaux d'entier
+
+// Runing examples
+Test201.java  Operateurs
+Test202.java  Exressions and Variables
+Test203.java  Initialisation, ...
+Test209.java  Tableaux
+
+// More Runing examples
+TestAckermann.java   Appel Recursif
+TestPeano.java       UTF8, equals(), pointeur et recursion
+
+// Syntax Error
+Test301.java  Erreurs Lexicales
+Test302.java  Erreurs Syntaxiques
+Test309.java  Stress test, synaxiquement correct
+
+// Semantic Error
+Test401.java   Controle de type
+Test402.java   Appel de methodes
+Test403.java   Heritage de classes
+Test404.java   404 file not fouund !!!
+Test405.java   Controle Undefined
+Test409.java   Controle de type et Tableau
+
+// Advanced (under testing)
+Test901.java   Heritage/surcharge/polymorphisne...
+

@@ -1,0 +1,36 @@
+### RUNTIME MIPS ###  (appended by codegen.LinkRuntime.java)
+equals:
+   # méthode Object.equals(Object)
+        seq $v0, $a0, $a1
+        jr   $ra
+_system_out_println:
+   # IN  $a0 = integer to print
+   # print integer
+        li   $v0,  1
+        syscall 
+   # print char newline
+        li   $a0, 10
+        li   $v0, 11
+        syscall
+   # end
+        jr   $ra
+_new_object:
+   # IN  $a0 = number of bytes
+   # OUT $v0 = allocated address
+   # malloc (sbrk)
+        li   $v0, 9
+        syscall
+   # initialize with zeros
+        move $t0, $a0
+        move $t1, $v0
+   # do until $t0=0
+_newobj_loop:
+        beq  $t0, $zero, _newobj_exit
+        sb   $zero, 0($t1)
+        addi $t1, $t1,  1 
+        addi $t0, $t0, -1 
+        j    _newobj_loop 
+_newobj_exit:
+   # done
+   # end
+        jr   $ra

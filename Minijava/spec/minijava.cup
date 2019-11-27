@@ -1,0 +1,55 @@
+package syntax;
+import syntax.ast.*; //  definition de l'AST
+
+action code {:
+// Classes utilitaires pour constructions de paires de listes
+  class VarOrMeth { // membres de classes = ( fVar | Method) *
+    ASTList<Var> vars;     ASTList<Method> methods;
+    VarOrMeth () { this.vars = new ASTList<>();  this.methods = new ASTList<>(); }
+  }
+  class VarOrStmt { // membre de methodes ou de blocs = ( Var | Stmt ) *
+    ASTList<Var> vars;     ASTList<Stmt> stmts;
+    VarOrStmt () { this.vars = new ASTList<>();  this.stmts = new ASTList<>(); }
+  }
+:};
+
+terminal SEP, LC, RC, LP, RP, LB, RB ; // ;{}()[]
+terminal CLASS, MAIN, PRINTLN, PUBLIC, STATIC, STRING,  VOID ;
+terminal Integer LIT_INT ;
+terminal String  IDENT ;
+
+nonterminal Axiom     axiom;
+nonterminal KlassMain klassMain;
+nonterminal Ident     ident;
+nonterminal Stmt      stmt; // production multiregle = Classe Abstraite
+nonterminal Expr      expr; // production multiregle = Classe Abstraite
+nonterminal ASTList<Klass>  klassList;
+
+///////////// Productions
+axiom ::= klassMain:a klassList:z
+           {: RESULT = new Axiom(a, z);
+              RESULT.addPosition(axleft, zxright); :}
+;
+klassMain ::= CLASS:a ident:id LC
+                PUBLIC STATIC VOID MAIN
+                  LP STRING LB RB ident:arg RP LC stmt:i RC
+              RC:z
+           {: RESULT = new KlassMain(id, arg, i);
+              RESULT.addPosition(axleft, zxright); :}
+;
+klassList ::= /* vide */
+                {: RESULT = new ASTList<>(); :}
+;
+ident ::= IDENT:a
+           {: RESULT = new Ident(a);
+              RESULT.addPosition(axleft,axright); :}
+;
+stmt ::= PRINTLN:a LP expr:b RP SEP:x
+           {: RESULT = new StmtPrint(b);
+              RESULT.addPosition(axleft, xxright); :}
+;
+expr ::= LIT_INT:a
+           {: RESULT = new ExprLiteralInt(a);
+              RESULT.addPosition(axleft, axright); :}
+;
+
