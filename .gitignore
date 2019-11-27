@@ -1,7 +1,10 @@
 Yylex.java
 sym.java
 parser.java
+
 *.class
 *.out
+*.mips
+
 *.swp
 
