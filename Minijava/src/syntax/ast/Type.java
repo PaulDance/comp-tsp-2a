@@ -11,12 +11,15 @@ public class Type extends ASTNode {
   /** Constructeur altérnatif */
   public Type(main.TYPE t) {  // type primitifs
     this.name = t.toString();
-  } 
+  }
 
   @Override
   public String toString() {
-    return super.toString() + " " + name;
+    return super.toString() + " " + this.name;
   }
 
-  public void accept(ASTVisitor v) { v.visit(this); }
+	@Override
+	public void accept(ASTVisitor v) {
+		v.visit(this);
+	}
 }
