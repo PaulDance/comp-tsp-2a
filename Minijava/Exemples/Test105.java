@@ -1,8 +1,10 @@
 class Test105 {
 	public static void main(String[] args) {
-		System.out.println(new Test2().Start(0));  //-42 !!
+		System.out.println(new Test2().Start(0)); // -42 !!
 	}
 }
+
+
 class Test2 {
 	public int Start(int y) {
 		int a;
@@ -25,9 +27,12 @@ class Test2 {
 		
 		b1 = true;
 		b2 = false;
-		b1 = b1 && b2 && ! b1;
+		b1 = b1 && b2 && !b1;
 		
-		return 2*a+8;
+		return 2 * a + 8;
 	}
-    public int evil() { return 666;}
+	
+	public int evil() {
+		return 666;
+	}
 }
