@@ -21,17 +21,19 @@ public class Compiler {
 		try {
 			DEBUG.log("=== Analyse Lexicale et Syntaxique ===");
 			syntax.ast.ASTNode axiom = new syntax.Syntax(infile).getResult();
-			
 			DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Analyse Semantique ===");
 			semantic.SemanticTree st = new semantic.Semantic(axiom).getResult();
+			DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Generation Representation Intermediaire ===");
 			intermediate.IR ir = new intermediate.Intermediate(st).getResult();
+			DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Generation Code ===");
 			String outfile = new codegen.CodeGen(ir, infile).getResult();
+			DEBUG.toBeContinued();
 			
 			if (DEBUG.RUNMARS) { // may be not here
 				DEBUG.log("== Execution Mars de " + outfile + " ===");
