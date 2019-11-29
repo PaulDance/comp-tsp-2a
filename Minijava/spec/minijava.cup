@@ -7,22 +7,23 @@ import main.*;
 
 action code {:
 // Classes utilitaires pour constructions de paires de listes
-	public class VarOrMeth { // membres de classes = ( fVar | Method) *
-		ASTList<Var> vars;
-		ASTList<Method> methods;
+	public class VarOrMethodList {		// membres de classes = ( fVar | Method) *
+		public final ASTList<Var> vars;
+		public final ASTList<Method> methods;
 		
-		public VarOrMeth() {
+		public VarOrMethodList() {
 			this.vars = new ASTList<>();
 			this.methods = new ASTList<>();
 		}
  	}
 	
-	class VarOrStmt { // membre de methodes ou de blocs = ( Var | Stmt ) *
-		ASTList<Var> vars;
-		ASTList<Stmt> stmts;
+	class VarOrStmtList { // membre de methodes ou de blocs = ( Var | Stmt ) *
+		public final ASTList<Var> vars;
+		public final ASTList<Stmt> stmts;
 		
-		public VarOrStmt() {
-			this.vars = new ASTList<>();  this.stmts = new ASTList<>();
+		public VarOrStmtList() {
+			this.vars = new ASTList<>();
+			this.stmts = new ASTList<>();
 		}
 	}
 :};
@@ -31,15 +32,21 @@ action code {:
 terminal PLUS, MINUS, TIMES, AND, LESS;
 terminal SEP, LC, RC, LP, RP, LB, RB;
 terminal CLASS, EXTENDS, MAIN, PRINTLN, PUBLIC, STATIC,
-			STRING,  VOID;
+			STRING,  VOID, BOOL, INT, RETURN;
 terminal Integer LIT_INT;
 terminal String  IDENT;
 
 nonterminal Axiom Axiom;
 nonterminal KlassMain KlassMain;
 nonterminal Klass Klass;
-nonterminal KlassBody KlassBody;
+nonterminal VarOrMethodList KlassBody, NonEmptyKlassBody;
+nonterminal Var Var;
+nonterminal Method Method;
+nonterminal VarOrStmtList MethodBody, NonEmptyMethodBody;
+nonterminal Formal Formal;
+nonterminal ASTList<Formal> FormalArgs;
 nonterminal Ident Ident;
+nonterminal Type Type;
 nonterminal Stmt Stmt;
 nonterminal Expr Expr;
 nonterminal ExprOpBin ExprOpBin;
@@ -51,37 +58,58 @@ precedence left LESS;
 precedence left PLUS, MINUS;
 precedence left TIMES;
 
-///////////// Productions
-Axiom ::= KlassMain:a KlassList:z
-		   {: RESULT = new Axiom(a, z);
-				RESULT.addPosition(axleft, zxright); :};
+
+Axiom ::= KlassMain:a KlassList:z							{: RESULT = new Axiom(a, z); RESULT.addPosition(axleft, zxright); :};
 
 KlassMain ::= CLASS:a Ident:id LC
 				PUBLIC STATIC VOID MAIN
-				LP STRING LB RB Ident:arg RP LC Stmt:i RC RC:z
-		   {: RESULT = new KlassMain(id, arg, i);
-				RESULT.addPosition(axleft, zxright); :};
+				LP STRING LB RB Ident:arg RP
+				LC Stmt:i RC RC:z							{: RESULT = new KlassMain(id, arg, i); RESULT.addPosition(axleft, zxright); :};
 
 KlassList ::= /* Epsilon */									{: RESULT = new ASTList<>(); :}
 			| KlassList:kl Klass:k							{: kl.add(k); RESULT = kl; :};
 
 Klass ::= CLASS Ident Parent LC KlassBody RC;
 
-Parent ::= /* Epsilon */									{: RESULT = null :}
-		| EXTENDS Ident:id									{: RESULT = id :};
+Parent ::= /* Epsilon */									{: RESULT = new Ident("Object"); :}
+		| EXTENDS Ident:id									{: RESULT = id; :};
 
-KlassBody ::= ;
+KlassBody ::= /* Epsilon */									{: RESULT = new VarOrMethodList(); :}
+			| NonEmptyKlassBody:kb							{: RESULT = kb; :};
 
-Ident ::= IDENT:a
-		   {: RESULT = new Ident(a);
-				RESULT.addPosition(axleft,axright); :};
+NonEmptyKlassBody ::= Var:var								{: RESULT = new VarOrMethodList(); RESULT.vars.add(var); :}
+					| Method:method							{: RESULT = new VarOrMethodList(); RESULT.methods.add(method); :}
+					| NonEmptyKlassBody:kb Var:var			{: kb.vars.add(var); RESULT = kb; :}
+					| NonEmptyKlassBody:kb Method:method	{: kb.methods.add(method); RESULT = kb; :};
 
-Stmt ::= PRINTLN:a LP Expr:b RP SEP:x
-		   {: RESULT = new StmtPrint(b);
-				RESULT.addPosition(axleft, xxright); :};
+Method ::= PUBLIC Type:type Ident:id LP
+			FormalArgs:fm RP LC MethodBody:mb
+			RETURN Expr:expr SEP							{: RESULT = new Method(type, id, fm, mb.args, mb.stmts, expr); :};
 
-Expr ::= LIT_INT:a											{: RESULT = new ExprLiteralInt(a);
-																RESULT.addPosition(axleft, axright); :}
+Formal ::= Type:type Ident:id								{: RESULT = new Formal(type, id); :};
+
+FormalArgs ::= /* Epsilon */								{: RESULT = new ASTList<Formal>(); :}
+			| FormalArgs:fa Formal:formal					{: fa.add(formal); RESULT = fa; :};
+
+MethodBody ::= /* Epsilon */								{: RESULT = new VarOrStmtList(); :}
+			| NonEmptyMethodBody:mb							{: RESULT = mb; :};
+
+NonEmptyMethodBody ::= Var:var								{: RESULT = new VarOrStmtList(); RESULT.vars.add(var); :}
+					| Stmt:stmt								{: RESULT = new VarOrStmtList(); RESULT.stmts.add(stmt); :}
+					| NonEmptyMethodBody:mb Var:var			{: mb.vars.add(var); RESULT = mb; :}
+					| NonEmptyMethodBody:mb Stmt:stmt		{: mb.stmts.add(stmt); RESULT = mb; :};
+
+Var ::= Type:type Ident:id SEP								{: RESULT = new Var(type, id); :};
+
+Type ::= BOOL												{: RESULT = new Type("boolean"); :}
+		| INT												{: RESULT = new Type("int"); :}
+		| Ident:id											{: RESULT = new Type(id.name); :};
+
+Ident ::= IDENT:a											{: RESULT = new Ident(a); RESULT.addPosition(axleft,axright); :};
+
+Stmt ::= PRINTLN:a LP Expr:b RP SEP:x						{: RESULT = new StmtPrint(b); RESULT.addPosition(axleft, xxright); :};
+
+Expr ::= LIT_INT:a											{: RESULT = new ExprLiteralInt(a); RESULT.addPosition(axleft, axright); :}
 		| LP Expr:expr RP									{: RESULT = expr; :}
 		| ExprOpBin:exprOpBin								{: RESULT = exprOpBin; :};
 

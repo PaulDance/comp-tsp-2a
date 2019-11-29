@@ -15,13 +15,16 @@ Println	= "System" {WS}* "." {WS}* "out" {WS}* "." {WS}* "println"
 %%
 // Mots Clés
 "class"			{ return TOKEN(CLASS); }
-"extends"			{ return TOKEN(EXTENDS); }
+"extends"		{ return TOKEN(EXTENDS); }
 "main"			{ return TOKEN(MAIN); }
 {Println}		{ return TOKEN(PRINTLN); }
 "public"		{ return TOKEN(PUBLIC); }
 "static"		{ return TOKEN(STATIC); }
 "String"		{ return TOKEN(STRING); }
 "void"			{ return TOKEN(VOID); }
+"boolean"		{ return TOKEN(BOOL); }
+"int"			{ return TOKEN(INT); }
+"return"		{ return TOKEN(RETURN); }
 
 // Opérateurs
 "+"				{ return TOKEN(PLUS); }
