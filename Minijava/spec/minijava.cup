@@ -64,14 +64,15 @@ precedence left TIMES;
 precedence right NOT;
 
 
-Axiom ::= KlassMain:a KlassList:z							{: RESULT = new Axiom(a, z); RESULT.addPosition(axleft, zxright); :};
+Axiom ::= KlassMain:km KlassList:kl							{: RESULT = new Axiom(km, kl); RESULT.addPosition(kmxleft, klxright); :};
 
 KlassMain ::= CLASS:a Ident:id LC
 				PUBLIC STATIC VOID MAIN
 				LP STRING LB RB Ident:arg RP
-				LC Stmt:i RC RC:z							{: RESULT = new KlassMain(id, arg, i); RESULT.addPosition(axleft, zxright); :};
+				LC MethodBody:mb RC RC:z					{: RESULT = new KlassMain(id, arg, new StmtBlock(mb.vars, mb.stmts));
+																RESULT.addPosition(axleft, zxright); :};
 
-KlassList ::= /* Epsilon */									{: RESULT = new ASTList<>(); :}
+KlassList ::= /* Epsilon */									{: RESULT = new ASTList<Klass>(); :}
 			| KlassList:kl Klass:k							{: kl.add(k); RESULT = kl; :};
 
 Klass ::= CLASS:a Ident:id Parent:p LC KlassBody:kb RC:z	{: RESULT = new Klass(id, p, kb.vars, kb.methods);

@@ -1,9 +1,7 @@
 class Test106 {
 	public static void main(String[] args) {
-		{
-			System.out.println(new Test2().Start(0)); // Prints 42
-			System.out.println(new Test2().Start(1)); // Prints 42
-		}
+		System.out.println(new Test2().Start(0)); // Prints 42
+		System.out.println(new Test2().Start(1)); // Prints 42
 	}
 }
 
