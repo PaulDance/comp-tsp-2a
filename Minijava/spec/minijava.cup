@@ -55,6 +55,7 @@ nonterminal ASTList<Expr> Args, NonEmptyArgs;
 nonterminal ExprOpBin ExprOpBin;
 nonterminal ASTList<Klass>  KlassList;
 
+precedence nonassoc ELSE;
 precedence left EQUALS;
 precedence left AND;
 precedence left LESS;
@@ -125,6 +126,8 @@ Stmt ::= PRINTLN:a LP Expr:b RP SEP:x						{: RESULT = new StmtPrint(b); RESULT.
 																RESULT.addPosition(idxleft, zxright); :}
 		| LC:a MethodBody:mb RC:z							{: RESULT = new StmtBlock(mb.vars, mb.stmts);
 																RESULT.addPosition(axleft, zxright); :}
+		| IF:a LP Expr:expr RP Stmt:thenStmt				{: RESULT = new StmtIf(expr, thenStmt, new StmtBlock(new ASTList<Var>(), new ASTList<Stmt>()));
+																RESULT.addPosition(axleft, thenStmtxright); :}
 		| IF:a LP Expr:expr RP Stmt:thenStmt
 			ELSE Stmt:elseStmt								{: RESULT = new StmtIf(expr, thenStmt, elseStmt);
 																RESULT.addPosition(axleft, elseStmtxright); :}
