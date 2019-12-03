@@ -113,7 +113,8 @@ NonEmptyMethodBody ::= Var:var								{: RESULT = new VarOrStmtList(); RESULT.va
 
 Var ::= Type:type Ident:id SEP:z							{: RESULT = new Var(type, id); RESULT.addPosition(typexleft, zxright); :};
 
-Type ::= BOOL:a												{: RESULT = new Type(TYPE.BOOL); RESULT.addPosition(axleft, axright); :}
+Type ::= VOID:a												{: RESULT = new Type(TYPE.VOID); RESULT.addPosition(axleft, axright); :}
+		| BOOL:a											{: RESULT = new Type(TYPE.BOOL); RESULT.addPosition(axleft, axright); :}
 		| INT:a												{: RESULT = new Type(TYPE.INT); RESULT.addPosition(axleft, axright); :}
 		| INT:a LB RB:z										{: RESULT = new Type(TYPE.INT_ARRAY); RESULT.addPosition(axleft, zxright); :}
 		| Ident:id											{: RESULT = new Type(id.name); RESULT.addPosition(idxleft, idxright); :};

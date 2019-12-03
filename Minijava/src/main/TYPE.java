@@ -2,7 +2,7 @@ package main;
 
 /** Enumeration des types primitifs et mapping toString() */
 public enum TYPE {
-	BOOL("boolean"), INT("int"), INT_ARRAY("int[]"), UNDEF("undef");
+	VOID("void"), BOOL("boolean"), INT("int"), INT_ARRAY("int[]"), UNDEF("undef");
 	
 	private final String name;
 	
