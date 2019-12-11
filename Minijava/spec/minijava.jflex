@@ -64,4 +64,4 @@ Println = "System" {WS}* "." {WS}* "out" {WS}* "." {WS}* "println"
 {Ignore}			{}
 
 // Ramasse Miette
-[^]					{ WARN("Unknown char '"+yytext()+"' "); return TOKEN(error); }
+[^]					{ WARN("Unknown char '" + yytext() + "' "); return TOKEN(error); }
