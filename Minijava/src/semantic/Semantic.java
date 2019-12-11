@@ -2,6 +2,7 @@ package semantic;
 
 import main.CompilerException;
 import main.DEBUG;
+import semantic.trials.ListVars;
 import syntax.ast.ASTNode;
 
 
@@ -30,6 +31,8 @@ public class Semantic {
 	
 	private void analyse() {
 		// Quelques tests de visiteur
+		new ListVars(this.semanticTree);
+		
 		// Construction de la table de symbole (passe 1)
 		// Controle la duplication de définition ("already defined")
 		BuildSymTab bst = new BuildSymTab(this.semanticTree);

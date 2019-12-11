@@ -4,6 +4,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import codegen.CodeGen;
+import intermediate.IR;
+import intermediate.Intermediate;
+import semantic.Semantic;
+import semantic.SemanticTree;
+import syntax.Syntax;
+import syntax.ast.ASTNode;
+
 
 /** Main du Compilateur Minijava **/
 public class Compiler {
@@ -20,24 +28,24 @@ public class Compiler {
 	Compiler(String infile) {
 		try {
 			DEBUG.log("=== Analyse Lexicale et Syntaxique ===");
-			syntax.ast.ASTNode axiom = new syntax.Syntax(infile).getResult();
-			DEBUG.toBeContinued();
+			ASTNode axiom = new Syntax(infile).getResult();
+			// DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Analyse Semantique ===");
-			semantic.SemanticTree st = new semantic.Semantic(axiom).getResult();
+			SemanticTree st = new Semantic(axiom).getResult();
 			DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Generation Representation Intermediaire ===");
-			intermediate.IR ir = new intermediate.Intermediate(st).getResult();
+			IR ir = new Intermediate(st).getResult();
 			DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Generation Code ===");
-			String outfile = new codegen.CodeGen(ir, infile).getResult();
+			String outfile = new CodeGen(ir, infile).getResult();
 			DEBUG.toBeContinued();
 			
 			if (DEBUG.RUNMARS) { // may be not here
 				DEBUG.log("== Execution Mars de " + outfile + " ===");
-				execCmd("java", "-jar", "lib/mars.jar", "nc", outfile);
+				this.execCmd("java", "-jar", "lib/mars.jar", "nc", outfile);
 			}
 		}
 		catch (CompilerException | IOException e) {
