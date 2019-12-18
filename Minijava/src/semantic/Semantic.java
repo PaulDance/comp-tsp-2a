@@ -39,6 +39,9 @@ public class Semantic {
 			DEBUG.log(this.semanticTree.rootScope.toPrint());
 		}
 		
+		CheckUndefinedSymbols cus = new CheckUndefinedSymbols(this.semanticTree);
+		this.error = cus.getError() || this.error;
+		
 		// Construction de la hierarchie des classes Java
 		// - Controle consistance de l'héritage (loop, "Object",..)
 		// - Integration de l'héritahe dans la table des symboles (passe 2)
