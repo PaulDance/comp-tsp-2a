@@ -1,6 +1,2 @@
-/allocator/
-/codegen/
-/intermediate/
-/main/
-/semantic/
 /syntax/
+/semantic/
