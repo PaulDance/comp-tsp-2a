@@ -2,6 +2,7 @@ package semantic;
 
 import main.CompilerException;
 import main.DEBUG;
+import semantic.symtab.InfoVar;
 import syntax.ast.ASTNode;
 
 
@@ -39,12 +40,9 @@ public class Semantic {
 			DEBUG.log(this.semanticTree.rootScope.toPrint());
 		}
 		
-		CheckUndefinedSymbols cus = new CheckUndefinedSymbols(this.semanticTree);
-		this.error = cus.getError() || this.error;
-		
-		// Construction de la hierarchie des classes Java
-		// - Controle consistance de l'héritage (loop, "Object",..)
-		// - Integration de l'héritahe dans la table des symboles (passe 2)
+		// Construction de la hiérarchie des classes Java
+		// - Contrôle consistance de l'héritage (loop, "Object",..)
+		// - Integration de l'héritage dans la table des symboles (passe 2)
 		CheckInheritance cch = new CheckInheritance(this.semanticTree);
 		this.error = cch.getError() || this.error;
 		
@@ -53,6 +51,18 @@ public class Semantic {
 			DEBUG.log(this.semanticTree.rootScope.toPrint());
 			DEBUG.log("= Liste des variables");
 			DEBUG.log(this.semanticTree.rootScope.getAllVariables());
+		}
+		
+		CheckUndefinedSymbols cUs = new CheckUndefinedSymbols(this.semanticTree);
+		this.error = cUs.getError() || this.error;
+		
+		CheckUnusedSymbols cus = new CheckUnusedSymbols(this.semanticTree);
+		this.error = cus.getError() || this.error;
+		
+		if (DEBUG.UNUSED) {
+			for (InfoVar unusedVar: cus.unusedVars) {
+				System.out.println(String.format("Warning: unused variable or attribute '%s'.", unusedVar));
+			}
 		}
 		
 		// Controle de Type et calcul de l'attribut nodeType
