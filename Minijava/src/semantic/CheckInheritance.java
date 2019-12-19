@@ -8,7 +8,7 @@ import semantic.symtab.Scope;
 
 
 /**
- * Validation de la hierarchie des classes (parent connu, sans boucle, "Object"
+ * Validation de la hiérarchie des classes (parent connu, sans boucle, "Object"
  * comme racine).
  * <p>
  * Reconstruction de l'arbre des portées pour integration transparente de

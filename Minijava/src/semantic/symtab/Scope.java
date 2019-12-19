@@ -7,10 +7,10 @@ import java.util.List;
 import main.IndentWriter;
 
 
-/*
- * Table des Symbole. <ul><li>Implémentation plus large que nécéssaire pour Java
+/**
+ * Table des Symbole. <ul><li>Implémentation plus large que nécessaire pour Java
  * ou MiniJava <li>Implémentation générale d'un arbre de portées avec lookup
- * recursif <li>3 espaces de nommage séparés : Classe, Methode, Variable
+ * récursif <li>3 espaces de noms séparés : Classe, Méthode, Variable
  * <li>Utilisable pour intégrer l'héritage des classes Java dans l'arbre de
  * portée <li>..... </ul>
  */
@@ -23,7 +23,7 @@ public class Scope {
 	private final Table<String, InfoKlass> klasses;
 	/*
 	 * En pratique avec Minijava : - klasses uniquement dans le scope Racine -
-	 * methodes uniquement dans les scopes de classe - varibles partout sauf
+	 * méthodes uniquement dans les scopes de classe - variables partout sauf
 	 * dans le scope Racine
 	 */
 	
@@ -39,10 +39,10 @@ public class Scope {
 	public Scope(Scope parent, String name) {
 		this.name = name;
 		this.parent = parent;
-		this.variables = new SimpleTable<>();
-		this.methods = new SimpleTable<>();
-		this.klasses = new SimpleTable<>();
-		this.scopes = new ArrayList<>();
+		this.variables = new SimpleTable<InfoVar>();
+		this.methods = new SimpleTable<InfoMethod>();
+		this.klasses = new SimpleTable<InfoKlass>();
+		this.scopes = new ArrayList<Scope>();
 		
 		if (parent != null) {
 			parent.scopes.add(this);
@@ -69,10 +69,12 @@ public class Scope {
 		return this.variables.getInfos();
 	}
 	
+	/**
+	 * Variables de la portée courante et des sous-protées. Utile
+	 * pour debug, check unused, utilisation de variables de bloc.
+	 */
 	public Collection<InfoVar> getAllVariables() {
-		// variables de la portée courrante et des sous-protée
-		// utile pour debug, check unused, utilisation de variables de bloc
-		List<InfoVar> res = new ArrayList<>();
+		List<InfoVar> res = new ArrayList<InfoVar>();
 		res.addAll(this.variables.getInfos());
 		
 		for (Scope s: this.scopes) {
@@ -104,7 +106,7 @@ public class Scope {
 	// Not Used : requis pour gestion du polymorphisme/surcharge
 	// utile aussi pour indication overriding
 	public List<InfoMethod> lookupAllMethod(String name) {
-		List<InfoMethod> list = new ArrayList<>();
+		List<InfoMethod> list = new ArrayList<InfoMethod>();
 		
 		for (Scope s = this; s != null; s = s.parent) {
 			InfoMethod m = s.methods.lookup(name);

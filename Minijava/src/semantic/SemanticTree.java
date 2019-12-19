@@ -8,7 +8,7 @@ import syntax.ast.ASTNode;
 
 
 /**
- * <b>Arbre Semantique</b> == AST + Attributs de Noeuds + Table de Symboles
+ * <b>Arbre Sémantique</b> == AST + Attributs de Noeuds + Table de Symboles
  * <p>
  * <b>Attributs hérités ou descendants :</b> <br>
  * <b>Scope</b> : portée courante dans la table de symboles
@@ -42,8 +42,8 @@ public class SemanticTree {
 	public SemanticTree(ASTNode axiom) {
 		this.axiom = axiom;
 		this.rootScope = new Scope(null, "Root");
-		this.scopeAttr = new SemanticAttribut<>();
-		this.typeAttr = new SemanticAttribut<>();
+		this.scopeAttr = new SemanticAttribut<Scope>();
+		this.typeAttr = new SemanticAttribut<String>();
 		this.addObjectKlass();
 	}
 	

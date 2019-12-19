@@ -8,13 +8,13 @@ import syntax.ast.ASTNode;
 
 /**
  * Décoration de l'AST : Attributs Sémantiques. <br>
- * Utilise une structure Map<ASTNode,R> pour eviter de modifier l'AST existant.
+ * Utilise une structure Map<ASTNode,R> pour éviter de modifier l'AST existant.
  * <p>
- * Usefull to :
+ * Useful to :
  * <ul>
  * <li>manage return value with (void) visitor (bottom-up Attributs)
- * <li>avoid paramaters in visitor (top-down Attributs)
- * <li>reuse Attributs between several visits (avoiding unconsistancy)
+ * <li>avoid parameters in visitor (top-down Attributs)
+ * <li>reuse Attributs between several visits (avoiding inconsistency)
  * </ul>
  */
 public class SemanticAttribut<R> {
@@ -24,11 +24,11 @@ public class SemanticAttribut<R> {
 		this.attribut = new HashMap<>();
 	}
 	
-	public R get(ASTNode n) {
-		return this.attribut.get(n);
+	public R get(ASTNode node) {
+		return this.attribut.get(node);
 	}
 	
-	public R set(ASTNode n, R attr) {
-		return this.attribut.put(n, attr);
+	public R set(ASTNode node, R attr) {
+		return this.attribut.put(node, attr);
 	}
 }

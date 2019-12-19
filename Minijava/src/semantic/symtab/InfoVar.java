@@ -1,12 +1,12 @@
 package semantic.symtab;
 
 /**
- * Déclaration de Varaible pour la table de symboles. Suivant le scope une
+ * Déclaration de Variable pour la table de symboles. Suivant le scope une
  * Variable est :
  * <ul>
  * <li>un champs de classe
- * <li>un argument de methode
- * <li>une variable locale de methode
+ * <li>un argument de méthode
+ * <li>une variable locale de méthode
  * <li>une variable locale de bloc
  * </ul>
  */
