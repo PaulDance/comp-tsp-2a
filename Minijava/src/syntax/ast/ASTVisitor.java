@@ -3,56 +3,56 @@ package syntax.ast;
 /** Interface Visiteur pour l'AST Minijava. */
 public interface ASTVisitor {
 	// Liste homogéne, extends ASTNode
-	<T extends ASTNode> void visit(ASTList<T> n);
+	<T extends ASTNode> void visit(ASTList<T> nodeList);
 	
 	// Productions de base, extends ASTNode
-	void visit(Axiom n);
+	void visit(Axiom axiom);
 	
-	void visit(Klass n);
+	void visit(Klass klass);
 	
-	void visit(KlassMain n);
+	void visit(KlassMain klassMain);
 	
-	void visit(Method n);
+	void visit(Method method);
 	
-	void visit(Formal n);
+	void visit(Formal formal);
 	
-	void visit(Ident n);
+	void visit(Ident ident);
 	
-	void visit(Type n);
+	void visit(Type type);
 	
-	void visit(Var n);
+	void visit(Var var);
 	
 	// Expressions , extends Expr
-	void visit(ExprArrayLength n);
+	void visit(ExprArrayLength exprArrayLength);
 	
-	void visit(ExprArrayLookup n);
+	void visit(ExprArrayLookup exprArrayLookup);
 	
-	void visit(ExprArrayNew n);
+	void visit(ExprArrayNew exprArrayNew);
 	
-	void visit(ExprCall n);
+	void visit(ExprCall exprCall);
 	
-	void visit(ExprIdent n);
+	void visit(ExprIdent exprIdent);
 	
-	void visit(ExprLiteralBool n);
+	void visit(ExprLiteralBool exprLiteralBool);
 	
-	void visit(ExprLiteralInt n);
+	void visit(ExprLiteralInt exprLiteralInt);
 	
-	void visit(ExprNew n);
+	void visit(ExprNew exprNew);
 	
-	void visit(ExprOpBin n);
+	void visit(ExprOpBin exprOpBin);
 	
-	void visit(ExprOpUn n);
+	void visit(ExprOpUn exprOpUn);
 	
 	// Instructions, extends Stmt
-	void visit(StmtArrayAssign n);
+	void visit(StmtArrayAssign stmtArrayAssign);
 	
-	void visit(StmtAssign n);
+	void visit(StmtAssign stmtAssign);
 	
-	void visit(StmtBlock n);
+	void visit(StmtBlock stmtBlock);
 	
-	void visit(StmtIf n);
+	void visit(StmtIf stmtIf);
 	
-	void visit(StmtPrint n);
+	void visit(StmtPrint stmtPrint);
 	
-	void visit(StmtWhile n);
+	void visit(StmtWhile stmtWhile);
 }

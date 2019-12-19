@@ -11,13 +11,13 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
  * Classe abstraite ancêtre pour AST.
  * <p>
  * Construction VarArgs <br>
- * Classe itérable : {@code for (ASTNode fils : pere) {...} } <br>
+ * Classe itérable : {@code for (ASTNode fils : père) {...} } <br>
  * Impression de l'arbre : {@link #toPrint()} <br>
  * Gestion des références dans le source :
  * {@link #addPosition(Location, Location)}
  */
 public abstract class ASTNode implements Iterable<ASTNode> {
-	public abstract void accept(ASTVisitor v);
+	public abstract void accept(ASTVisitor visitor);
 	
 	private final String label;
 	private final List<ASTNode> fils;
