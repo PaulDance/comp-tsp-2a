@@ -7,10 +7,10 @@ package syntax;
 WS = [ \t\f] | \R
 EOLComment = "//" .*
 C89Comment = "/*" [^*]* ("*" ([^*/] [^*]*)?)* "*/"
-Ignore = {WS}+ | {EOLComment} | {C89Comment}
+Ignored = {WS}+ | {EOLComment} | {C89Comment}
 Integer = 0 | [1-9] [0-9]*
 Identifier = [:jletter:] [:jletterdigit:]*
-Println = "System" {WS}* "." {WS}* "out" {WS}* "." {WS}* "println"
+Println = "System" {Ignored}* "." {Ignored}* "out" {Ignored}* "." {Ignored}* "println"
 
 %%
 // Keywords
@@ -60,8 +60,8 @@ Println = "System" {WS}* "." {WS}* "out" {WS}* "." {WS}* "println"
 {Identifier}		{ return TOKEN(IDENT,	new String(yytext())); }
 
 
-// Ignore
-{Ignore}			{}
+// Ignored
+{Ignored}			{}
 
 // Ramasse Miette
 [^]					{ WARN("Unknown char '" + yytext() + "' "); return TOKEN(error); }
