@@ -47,9 +47,9 @@ class Foo extends Meep {
 		a = new Meep();
 		a[2] = (aa + bb).yarrr();
 		System.out.println(5);
-		System.out /* comment */ .println(38);
-		System.out // comment
-				.println(38);
+		//System.out /* comment */ .println(38);
+		//System.out // comment
+		//		.println(38);
 		return false;
 	}
 }
