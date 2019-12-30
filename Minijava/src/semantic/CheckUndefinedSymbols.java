@@ -14,6 +14,7 @@ public class CheckUndefinedSymbols extends ASTVisitorDefault {
 	private boolean error;
 	
 	public CheckUndefinedSymbols(SemanticTree semanticTree) {
+		this.error = false;
 		this.semanticTree = semanticTree;
 		this.semanticTree.axiom.accept(this);
 	}
