@@ -9,6 +9,7 @@ import intermediate.ir.IRQuadruple;
 import intermediate.ir.IRTempo;
 import intermediate.ir.IRVar;
 import intermediate.ir.QLabel;
+import intermediate.ir.QLabelMeth;
 import semantic.SemanticTree;
 import semantic.symtab.Scope;
 
@@ -94,7 +95,7 @@ public class IR {
 		StringBuilder sb = new StringBuilder();
 		
 		for (IRQuadruple q: this.program) {
-			if (!(q instanceof QLabel)) {
+			if (!((q instanceof QLabel) || (q instanceof QLabelMeth) )) {
 				sb.append('\t');
 			}
 			
