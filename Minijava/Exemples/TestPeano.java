@@ -1,5 +1,5 @@
 /*
- * Entier de Peano et poupée risse requires UTF8 in MIPS (MARS OK)
+ * Entier de Peano et poupée russe requièrent UTF8 en MIPS (MARS OK).
  */
 class TestPeano {
 	public static void main(String[] args) {
@@ -34,8 +34,7 @@ class Peano {
 		return this.печатать(d1) + this.печатать(d2) - this.печатать(this.плюс(d1, d2));
 	}
 	
-	public Матрёшка init(int level) { // return
-										// Matchiochka(Matriochka(...(null)...))
+	public Матрёшка init(int level) { // return Matriochka(Matriochka(...(null)...))
 		Матрёшка doll;
 		
 		if (level < 1) {
@@ -48,7 +47,7 @@ class Peano {
 		return doll;
 	}
 	
-	public Матрёшка плюс(Матрёшка d1, Матрёшка d2) { // addition de Peabo
+	public Матрёшка плюс(Матрёшка d1, Матрёшка d2) { // addition de Peano
 		Матрёшка doll;
 		
 		if (d1.equals(НОЛЬ)) {

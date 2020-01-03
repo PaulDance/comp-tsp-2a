@@ -33,7 +33,7 @@ public class Compiler {
 			
 			DEBUG.log("=== Analyse Semantique ===");
 			SemanticTree st = new Semantic(axiom).getResult();
-			DEBUG.toBeContinued();
+			// DEBUG.toBeContinued();
 			
 			DEBUG.log("=== Generation Representation Intermediaire ===");
 			IR ir = new Intermediate(st).getResult();
