@@ -4,25 +4,25 @@ class Test403 {
 	}
 }
 
-//
-//class G extends H {
-//} // FAIL Class Loop
-//
-//
-//class H extends G {
-//} // Fail Class Loop
-//
-//
-//class F extends F {
-//} // Fail Class Loop
-//
-//
-//class E extends Unk {
-//} // Fail Class Undef
-//
-//
-//class D extends Test4 {
-//}
+
+class G extends H {
+} // FAIL Class Loop
+
+
+class H extends G {
+} // Fail Class Loop
+
+
+class F extends F {
+} // Fail Class Loop
+
+
+class E extends Unk {
+} // Fail Class Undef
+
+
+class D {
+}
 
 
 class C extends B {

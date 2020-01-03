@@ -8,15 +8,16 @@ import syntax.ast.ASTNode;
 
 /** Analyse Sémantique */
 public class Semantic {
-	// Continuation sur erreur jusqu'a la fin de l'analyse semantique
+	/**
+	 * Continuation sur erreur jusqu'a la fin de l'analyse sémantique.
+	 */
 	private boolean error;
+	private final SemanticTree semanticTree;
 	
-	/** Stucture de donnée en sortie de l'analyse sémantique */
+	/** Structure de donnée en sortie de l'analyse sémantique. */
 	public SemanticTree getResult() {
 		return this.semanticTree;
 	}
-	
-	private final SemanticTree semanticTree;
 	
 	/** Constructeur */
 	public Semantic(ASTNode axiom) {
@@ -30,8 +31,8 @@ public class Semantic {
 	}
 	
 	private void analyse() {
-		// Construction de la table de symbole (passe 1)
-		// Controle la duplication de définition ("already defined")
+		// Construction de la table de symbole (passe 1).
+		// Contrôle la duplication de définition ("already defined").
 		BuildSymTab bst = new BuildSymTab(this.semanticTree);
 		this.error = bst.getError() || this.error;
 		
@@ -40,7 +41,7 @@ public class Semantic {
 			DEBUG.log(this.semanticTree.rootScope.toPrint());
 		}
 		
-		// Construction de la hiérarchie des classes Java
+		// Construction de la hiérarchie des classes Java :
 		// - Contrôle consistance de l'héritage (loop, "Object",..)
 		// - Integration de l'héritage dans la table des symboles (passe 2)
 		CheckInheritance cch = new CheckInheritance(this.semanticTree);
@@ -53,6 +54,10 @@ public class Semantic {
 			DEBUG.log(this.semanticTree.rootScope.getAllVariables());
 		}
 		
+		// Contrôle de Type et calcul de l'attribut nodeType.
+		TypeChecking tc = new TypeChecking(this.semanticTree);
+		this.error = tc.getError() || this.error;
+		
 		CheckUndefinedSymbols cUs = new CheckUndefinedSymbols(this.semanticTree);
 		this.error = cUs.getError() || this.error;
 		
@@ -64,14 +69,5 @@ public class Semantic {
 				System.out.println(String.format("Warning: unused variable or attribute '%s'.", unusedVar));
 			}
 		}
-		
-		// Controle de Type et calcul de l'attribut nodeType
-		TypeChecking tc = new TypeChecking(this.semanticTree);
-		this.error = tc.getError() || this.error;
-		
-		// Controle des identificateurs non définis
-		// Controle des declarations de variables unused dans la meme phase
-		// NB : le controle de type est requis avant
-		// ...
 	}
 }
