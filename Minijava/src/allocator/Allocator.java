@@ -116,7 +116,7 @@ public class Allocator {
 		}
 		// local vars in Frame
 		// in sub scope
-		for (IRVar v: m.getLocals()) {
+		for (IRVar v: m.getScope().getAllVariables()) {
 			this.access.put(v, new AccessOff("$fp", -4 - frSize));
 			frSize += 4;
 		}
