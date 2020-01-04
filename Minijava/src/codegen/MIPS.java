@@ -50,7 +50,7 @@ public class MIPS {
 		}
 	}
 	
-	// Des instructions predefinies
+	// Des instructions prédéfinies
 	public void load(String r0, int offset, String r1) {
 		this.inst("lw   " + r0 + ", " + offset + "(" + r1 + ")");
 	}

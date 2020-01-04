@@ -19,79 +19,181 @@ import intermediate.ir.QNew;
 import intermediate.ir.QNewArray;
 import intermediate.ir.QParam;
 import intermediate.ir.QReturn;
+import main.CompilerException;
 
 
 public class IR2MIPS {
 	final Allocator allocator;
 	final MIPS mips;
-	private static final int S_REG_USED = 0;// need to save register $s0 to
-											// $sS_REG_USED
-	private static final int T_REG_USED = 0;// need to save register $t0 to
-											// $tT_REG_USED
+	private static final int S_REG_USED = 0;	// need to save register $s0 to $sS_REG_USED.
+	private static final int T_REG_USED = 0;	// need to save register $t0 to $tT_REG_USED.
 	
 	public IR2MIPS(IR ir, Allocator allocator, MIPS mips) {
 		this.allocator = allocator;
 		this.mips = mips;
 		mips.println(".text");
 		
-		for (IRQuadruple q: ir.program) {
-			mips.com(q.toString()); // put IR as comment
-			this.accept(q);
+		for (IRQuadruple irQuadruple: ir.program) {
+			mips.com(irQuadruple.toString());	// put IR as comment
+			this.accept(irQuadruple);
 		}
 	}
 	
-	void accept(IRQuadruple q) {
-		if (q instanceof QLabelMeth) {
-			this.visit(q);
+	void accept(IRQuadruple irQuadruple) {
+		if (irQuadruple instanceof QLabelMeth) {
+			this.visit((QLabelMeth) irQuadruple);
 		}
-		else if (q instanceof QLabel) {
-			this.visit((QLabel) q);
+		else if (irQuadruple instanceof QLabel) {
+			this.visit((QLabel) irQuadruple);
 		}
-		else if (q instanceof QJump) {
-			this.visit(q);
+		else if (irQuadruple instanceof QJump) {
+			this.visit((QJump) irQuadruple);
 		}
-		else if (q instanceof QJumpCond) {
-			this.visit(q);
+		else if (irQuadruple instanceof QJumpCond) {
+			this.visit((QJumpCond) irQuadruple);
 		}
-		else if (q instanceof QReturn) {
-			this.visit(q);
+		else if (irQuadruple instanceof QReturn) {
+			this.visit((QReturn) irQuadruple);
 		}
-		else if (q instanceof QParam) {
-			this.visit((QParam) q);
+		else if (irQuadruple instanceof QParam) {
+			this.visit((QParam) irQuadruple);
 		}
-		else if (q instanceof QCall) {
-			this.visit((QCall) q);
+		else if (irQuadruple instanceof QCall) {
+			this.visit((QCall) irQuadruple);
 		}
-		else if (q instanceof QNew) {
-			this.visit(q);
+		else if (irQuadruple instanceof QNew) {
+			this.visit((QNew) irQuadruple);
 		}
-		else if (q instanceof QCopy) {
-			this.visit(q);
+		else if (irQuadruple instanceof QCopy) {
+			this.visit((QCopy) irQuadruple);
 		}
-		else if (q instanceof QAssign) {
-			this.visit(q);
+		else if (irQuadruple instanceof QAssign) {
+			this.visit((QAssign) irQuadruple);
 		}
-		else if (q instanceof QAssignUnary) {
-			this.visit(q);
+		else if (irQuadruple instanceof QAssignUnary) {
+			this.visit((QAssignUnary) irQuadruple);
 		}
-		else if (q instanceof QNewArray) {
-			this.visit(q);
+		else if (irQuadruple instanceof QNewArray) {
+			this.visit(irQuadruple);
 		}
-		else if (q instanceof QAssignArrayFrom) {
-			this.visit(q);
+		else if (irQuadruple instanceof QAssignArrayFrom) {
+			this.visit(irQuadruple);
 		}
-		else if (q instanceof QAssignArrayTo) {
-			this.visit(q);
+		else if (irQuadruple instanceof QAssignArrayTo) {
+			this.visit(irQuadruple);
 		}
-		else if (q instanceof QLength) {
-			this.visit(q);
+		else if (irQuadruple instanceof QLength) {
+			this.visit(irQuadruple);
 		}
 		else {
-			throw new main.CompilerException("IR2MIPS : unmanaged IR :" + q);
+			throw new CompilerException("IR2MIPS : unmanaged IR :" + irQuadruple);
 		}
 	}
 	
-	// // register helpers :Load and Store wuth respect to Variable Accss
+	void visit(QCopy qCopy) {
+		this.regLoad("$v0", qCopy.arg1);
+		this.regStore("$v0", qCopy.result);
+	}
+	
+	void visit(QJump qJump) {
+		this.mips.jump(qJump.arg1.getName());
+	}
+	
+	void visit(QJumpCond qJumpCond) {
+		this.regLoad("$v0", qJumpCond.arg2);
+		this.mips.jump(qJumpCond.arg1.getName(), "$v0");
+	}
+	
+	void visit(QAssignUnary qAssignUnary) {
+		this.regLoad("v0", qAssignUnary.arg1);
+		this.mips.oper("$v0", qAssignUnary.op);
+		this.regStore("v0", qAssignUnary.result);
+	}
+	
+	void visit(QAssign qAssign) {
+		this.regLoad("$v0", qAssign.arg1);
+		this.regLoad("$v1", qAssign.arg2);
+		
+		this.mips.oper("$v0", qAssign.op, "$v1");
+		
+		this.regStore("$v0", qAssign.result);
+	}
+	
+	void visit(QNew qNew) {
+		this.push("$a0");
+		
+		this.mips.load("$a0", this.allocator.classSize(qNew.arg1.getName()));
+		this.mips.jumpAdr("_new_object");
+		this.regStore("v0", qNew.result);
+		
+		this.pop("$a0");
+	}
+	
+	/**
+	 * <b>QLabel : </b> <br>
+	 * Label arg1
+	 */
+	void visit(QLabel qLabel) {
+		this.mips.label(qLabel.arg1.getName());
+	}
+
+	void visit(QLabelMeth qLabelMeth) {
+		this.mips.label(qLabelMeth.arg1.getName());
+		this.calleeIn();
+	}
+	
+	/**
+	 * <b>QParam : </b> <br>
+	 * Param arg1
+	 */
+	void visit(QParam qParam) {
+		this.params[this.indexParams++] = qParam.arg1;
+	}
+	
+	/**
+	 * <b>QCall :</b> <br>
+	 * result = call arg1 [numParams=arg2]
+	 */
+	void visit(QCall qCall) {
+		final String functionName = qCall.arg1.getName();
+		final int argsNb = this.checkArgs(qCall);
+		
+		if (argsNb > 4) {
+			throw new CompilerException("IR2MIPS : too many args in method " + functionName);
+		}
+		else if (qCall.result == null) {
+			this.specialCall(functionName);
+		}
+		else {
+			this.callerSave();
+			
+			for (int i = 0; i < 4 && i < argsNb; i++) {
+				this.regLoadSaved("$a" + i, this.getArg(i));
+			}
+			
+			this.mips.move("$fp", "$sp");
+			this.mips.add("$sp", -this.allocator.frameSize(functionName));
+			
+			this.mips.jumpAdr(functionName);
+			
+			this.mips.move("$sp", "$fp");
+			this.callerRestore();
+			this.regStore("$v0", qCall.result);
+		}
+	}
+	
+	void visit(QReturn qReturn) {
+		this.regLoad("$v0", qReturn.result);
+		this.calleeOut();
+	}
+	
+	/** Unknown Quadruple */
+	void visit(IRQuadruple irQuadruple) {
+		throw new CompilerException("IR2MIPS : unmanaged IRQuadruple " + irQuadruple);
+	}
+	
+	
+	// Register helpers: Load and Store with respect to Variable Access.
 	void regLoad(String reg, IRVar v) {
 		this.mips.inst(this.allocator.access(v).load(reg));
 	}
@@ -104,7 +206,9 @@ public class IR2MIPS {
 		this.mips.inst(this.allocator.access(v).store(reg));
 	}
 	
-	// varargs for stack ; push/pop n register
+	/**
+	 * VarArgs for stack ; push/pop n register.
+	 */
 	void push(String... regs) {
 		int size = regs.length;
 		
@@ -129,8 +233,23 @@ public class IR2MIPS {
 		}
 	}
 	
-	// ///// helpers : save/restore register (should be in allocator)
-	// Callee-saved (QLabelMeth,QReturn) : $ra (+ $s0-7)
+	// Helpers : save/restore register (should be in allocator).
+	/**
+	 * Caller save/restore (QCall) : $a0-3 (+ $t0-9).
+	 */
+	void callerSave() {
+		this.push(this.tRegList());
+		this.push("$fp", "$a3", "$a2", "$a1", "$a0");
+	}
+	
+	void callerRestore() {
+		this.pop("$fp", "$a3", "$a2", "$a1", "$a0");
+		this.pop(this.tRegList());
+	}
+	
+	/**
+	 * Called-saved (QLabelMeth,QReturn) : $ra (+ $s0-7).
+	 */
 	void calleeIn() {
 		this.mips.inst("sw   $ra ,  -4($fp)");
 		
@@ -141,20 +260,10 @@ public class IR2MIPS {
 	
 	void calleeOut() {
 		this.mips.inst("lw   $ra ,  -4($fp)");
+		
 		for (int i = 0; i < S_REG_USED; i++) {
 			this.mips.inst("lw   $s" + i + " ,  -" + (4 * i + 8) + "($fp)");
 		}
-	}
-	
-	// Caller save/restore (QCall) : $a0-3 (+ $t0-9)
-	void callerSave() {
-		this.push(this.tRegList());
-		this.push("$fp", "$a3", "$a2", "$a1", "$a0");
-	}
-	
-	void callerRestore() {
-		this.pop("$fp", "$a3", "$a2", "$a1", "$a0");
-		this.pop(this.tRegList());
 	}
 	
 	String[] tRegList() {
@@ -167,20 +276,6 @@ public class IR2MIPS {
 		return s;
 	}
 	
-	// ////////////// VISIT ///////////////
-	/** unknown Quadruple */
-	void visit(IRQuadruple q) {
-		throw new main.CompilerException("IR2MIPS : unmanaged IRQuadruple " + q);
-	}
-	
-	/**
-	 * <b>QLabel : </b> <br>
-	 * Label arg1
-	 */
-	void visit(QLabel q) {
-		this.mips.label(q.arg1.getName());
-	}
-	
 	/* QParam/QCall helpers */
 	private final IRVar[] params = new IRVar[42];
 	private int indexParams = 0;
@@ -189,7 +284,7 @@ public class IR2MIPS {
 		int nbArgs = Integer.parseInt(q.arg2.getName());
 		
 		if (nbArgs != this.indexParams) {
-			throw new main.CompilerException("IR2MIPS : Params error");
+			throw new CompilerException("IR2MIPS : Params error");
 		}
 		
 		this.indexParams = 0;
@@ -198,7 +293,7 @@ public class IR2MIPS {
 	
 	protected IRVar getArg(int i) {
 		if (this.indexParams != 0) {
-			throw new main.CompilerException("IR2MIPS : checkArgs() missing");
+			throw new CompilerException("IR2MIPS : checkArgs() missing");
 		}
 		
 		return this.params[i];
@@ -220,37 +315,10 @@ public class IR2MIPS {
 				return;
 				
 			case "main":
-				throw new main.CompilerException("IR2MIPS : recurse main forbidden");
+				throw new CompilerException("IR2MIPS : recurse main forbidden");
 				
 			default:
-				throw new main.CompilerException("IR2MIPS : undef void Method " + function);
+				throw new CompilerException("IR2MIPS : undef void Method " + function);
 		}
-	}
-	
-	/**
-	 * <b>QParam : </b> <br>
-	 * Param arg1
-	 */
-	void visit(QParam q) {
-		this.params[this.indexParams++] = q.arg1;
-	}
-	
-	/**
-	 * <b>QCall :</b> <br>
-	 * result = call arg1 [numParams=arg2]
-	 */
-	void visit(QCall q) {
-		String function = q.arg1.getName();
-		int nbArg = this.checkArgs(q);
-		
-		if (nbArg > 4) {
-			throw new main.CompilerException("IR2MIPS : too many args in method " + function);
-		}
-		
-		if (q.result == null) {
-			this.specialCall(function);
-			return;
-		}
-		// else : common minijava methods
 	}
 }
