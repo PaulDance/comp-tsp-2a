@@ -56,12 +56,13 @@ nonterminal ExprOpBin ExprOpBin;
 nonterminal ASTList<Klass>  KlassList;
 
 precedence nonassoc ELSE;
-precedence left EQUALS;
+precedence right EQUALS;
 precedence left AND;
 precedence left LESS;
 precedence left PLUS, MINUS;
 precedence left TIMES;
 precedence right NOT;
+precedence left DOT;
 
 
 Axiom ::= KlassMain:km KlassList:kl							{: RESULT = new Axiom(km, kl); RESULT.addPosition(kmxleft, klxright); :};
