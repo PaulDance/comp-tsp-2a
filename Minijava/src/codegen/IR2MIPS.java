@@ -105,9 +105,9 @@ public class IR2MIPS {
 	}
 	
 	void visit(QAssignUnary qAssignUnary) {
-		this.regLoad("v0", qAssignUnary.arg1);
+		this.regLoad("$v0", qAssignUnary.arg1);
 		this.mips.oper("$v0", qAssignUnary.op);
-		this.regStore("v0", qAssignUnary.result);
+		this.regStore("$v0", qAssignUnary.result);
 	}
 	
 	void visit(QAssign qAssign) {
@@ -124,7 +124,7 @@ public class IR2MIPS {
 		
 		this.mips.load("$a0", this.allocator.classSize(qNew.arg1.getName()));
 		this.mips.jumpAdr("_new_object");
-		this.regStore("v0", qNew.result);
+		this.regStore("$v0", qNew.result);
 		
 		this.pop("$a0");
 	}
@@ -183,8 +183,9 @@ public class IR2MIPS {
 	}
 	
 	void visit(QReturn qReturn) {
-		this.regLoad("$v0", qReturn.result);
 		this.calleeOut();
+		this.regLoad("$v0", qReturn.arg1);
+		this.mips.retour();
 	}
 	
 	/** Unknown Quadruple */

@@ -1,2 +1,5 @@
 /syntax/
 /main/
+/allocator/
+/codegen/
+/intermediate/
