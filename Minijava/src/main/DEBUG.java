@@ -27,9 +27,9 @@ public class DEBUG {
 	/** Impression des Variables non utilisées */
 	public static final boolean UNUSED = true;
 	/** Impression de la forme intermédiaire */
-	public static final boolean INTERMED = true;
+	public static final boolean INTERMED = false;
 	/** Dump de l'allocation Mémoire */
-	public static final boolean ALLOCATOR = true;
+	public static final boolean ALLOCATOR = false;
 	/** Execution avec Mars du résultat de la compilation */
 	public static final boolean RUNMARS = true;
 	

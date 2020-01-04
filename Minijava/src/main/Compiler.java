@@ -29,31 +29,27 @@ public class Compiler {
 		try {
 			DEBUG.log("=== Analyse Lexicale et Syntaxique ===");
 			ASTNode axiom = new Syntax(infile).getResult();
-			// DEBUG.toBeContinued();
 			
-			DEBUG.log("=== Analyse Semantique ===");
+			DEBUG.log("=== Analyse Sémantique ===");
 			SemanticTree st = new Semantic(axiom).getResult();
-			// DEBUG.toBeContinued();
 			
-			DEBUG.log("=== Generation Representation Intermediaire ===");
+			DEBUG.log("=== Génération Représentation Intermédiaire ===");
 			IR ir = new Intermediate(st).getResult();
-			DEBUG.toBeContinued();
 			
-			DEBUG.log("=== Generation Code ===");
+			DEBUG.log("=== Génération Code ===");
 			String outfile = new CodeGen(ir, infile).getResult();
-			DEBUG.toBeContinued();
 			
 			if (DEBUG.RUNMARS) { // may be not here
-				DEBUG.log("== Execution Mars de " + outfile + " ===");
+				DEBUG.log("=== Exécution Mars de " + outfile + " ===");
 				this.execCmd("java", "-jar", "lib/mars.jar", "nc", outfile);
 			}
 		}
 		catch (CompilerException | IOException e) {
-			DEBUG.logErr("Compilation aborted : " + e.getMessage());
+			DEBUG.logErr("Compilation aborted: " + e.getMessage());
 		}
 	}
 	
-	/** Execution d'une commande dans un procesus externe */
+	/** Exécution d'une commande dans un processus externe. */
 	private void execCmd(String... cmd) throws IOException {
 		BufferedReader std;
 		String s;
