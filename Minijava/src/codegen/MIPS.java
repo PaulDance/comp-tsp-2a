@@ -61,11 +61,10 @@ public class MIPS {
 	
 	public void move(String r0, String r1) {
 		this.inst("move " + r0 + ", " + r1);
-		// == "addiu "+ r0 +", " + r1 +", 0"
 	}
 	
 	public void store(String r0, int offset, String r1) {
-		this.inst("lw   " + r0 + ", " + offset + "(" + r1 + ")");
+		this.inst("sw   " + r0 + ", " + offset + "(" + r1 + ")");
 	}
 	
 	public void jump(String name, String r0) {
@@ -119,6 +118,10 @@ public class MIPS {
 		else {
 			this.inst("BAD OP " + op);
 		}
+	}
+	
+	public void add(String r0, String r1) {
+		this.inst("add  " + r0 + ", " + r0 + ", " + r1);
 	}
 	
 	public void add(String r0, int immediate) {

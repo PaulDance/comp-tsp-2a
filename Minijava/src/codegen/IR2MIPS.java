@@ -74,16 +74,16 @@ public class IR2MIPS {
 			this.visit((QAssignUnary) irQuadruple);
 		}
 		else if (irQuadruple instanceof QNewArray) {
-			this.visit(irQuadruple);
+			this.visit((QNewArray) irQuadruple);
 		}
 		else if (irQuadruple instanceof QAssignArrayFrom) {
-			this.visit(irQuadruple);
+			this.visit((QAssignArrayFrom) irQuadruple);
 		}
 		else if (irQuadruple instanceof QAssignArrayTo) {
-			this.visit(irQuadruple);
+			this.visit((QAssignArrayTo) irQuadruple);
 		}
 		else if (irQuadruple instanceof QLength) {
-			this.visit(irQuadruple);
+			this.visit((QLength) irQuadruple);
 		}
 		else {
 			throw new CompilerException("IR2MIPS : unmanaged IR :" + irQuadruple);
@@ -119,12 +119,58 @@ public class IR2MIPS {
 		this.regStore("$v0", qAssign.result);
 	}
 	
+	void visit(QAssignArrayFrom qAssignArrayFrom) {
+		this.regLoad("$v0", qAssignArrayFrom.arg1);				// Address of the array.
+		this.regLoad("$v1", qAssignArrayFrom.arg2);				// Index of the element.
+		
+		this.mips.add("$v1", 1);
+		this.mips.fois4("$v1");									// Compute the address of the element.
+		this.mips.add("$v1", "$v0");
+		
+		this.mips.load("$v0", 0, "$v1");
+		this.regStore("$v0", qAssignArrayFrom.result);			// Return the result value.
+	}
+	
+	void visit(QAssignArrayTo qAssignArrayTo) {
+		this.regLoad("$v1", qAssignArrayTo.result);				// Address of the array.
+		this.regLoad("$v0", qAssignArrayTo.arg1);				// Element to assign.
+		this.regLoad("$t0", qAssignArrayTo.arg2);				// Index of the array element.
+		
+		this.mips.add("$t0", 1);
+		this.mips.fois4("$t0");									// Compute the address of the element.
+		this.mips.add("$t0", "$v1");
+		
+		this.mips.store("$v0", 0, "$t0");						// Return the result value.
+	}
+	
+	void visit(QLength qLength) {
+		this.regLoad("$v0", qLength.arg1);
+		this.mips.load("$v0", 0, "$v0");
+		this.regStore("$v0", qLength.result);
+	}
+	
 	void visit(QNew qNew) {
 		this.push("$a0");
 		
 		this.mips.load("$a0", this.allocator.classSize(qNew.arg1.getName()));
 		this.mips.jumpAdr("_new_object");
 		this.regStore("$v0", qNew.result);
+		
+		this.pop("$a0");
+	}
+	
+	void visit(QNewArray qNewArray) {
+		this.push("$a0");
+		
+		this.regLoad("$a0", qNewArray.arg2);
+		this.mips.move("$v1", "$a0");
+		this.mips.add("$a0", 1);								// Get and compute the number of bytes,
+		this.mips.fois4("$a0");
+		
+		this.mips.jumpAdr("_new_object");
+		
+		this.mips.store("$v1", 0, "$v0");						// then store the length in the first element.
+		this.regStore("$v0", qNewArray.result);
 		
 		this.pop("$a0");
 	}

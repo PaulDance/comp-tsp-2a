@@ -14,6 +14,7 @@ import intermediate.ir.QLabel;
 import intermediate.ir.QLabelMeth;
 import intermediate.ir.QLength;
 import intermediate.ir.QNew;
+import intermediate.ir.QNewArray;
 import intermediate.ir.QParam;
 import intermediate.ir.QReturn;
 import main.DEBUG;
@@ -23,6 +24,7 @@ import syntax.ast.ASTNode;
 import syntax.ast.ASTVisitorDefault;
 import syntax.ast.ExprArrayLength;
 import syntax.ast.ExprArrayLookup;
+import syntax.ast.ExprArrayNew;
 import syntax.ast.ExprCall;
 import syntax.ast.ExprIdent;
 import syntax.ast.ExprLiteralBool;
@@ -127,14 +129,14 @@ public class Intermediate extends ASTVisitorDefault {
 		this.add(new QNew(this.newLabel(exprNew.klassId.name), this.getVar(exprNew)));
 	}
 	
-//	@Override
-//	public void visit(ExprArrayNew exprArrayNew) {
-//		this.defaultVisit(exprArrayNew);
-//		this.setVar(exprArrayNew, this.newTemp());
-//		this.add(new QNewArray(this.semanticTree.typeAttr.get(exprArrayNew),
-//				this.getVar(exprArrayNew.size),
-//				this.getVar(exprArrayNew)));
-//	}
+	@Override
+	public void visit(ExprArrayNew exprArrayNew) {
+		this.defaultVisit(exprArrayNew);
+		this.setVar(exprArrayNew, this.newTemp());
+		this.add(new QNewArray(this.newTemp(),
+								this.getVar(exprArrayNew.size),
+								this.getVar(exprArrayNew)));
+	}
 	
 	@Override
 	public void visit(KlassMain klassMain) {
