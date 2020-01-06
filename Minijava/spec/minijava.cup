@@ -62,7 +62,7 @@ precedence left LESS;
 precedence left PLUS, MINUS;
 precedence left TIMES;
 precedence right NOT;
-precedence left DOT;
+precedence left DOT, LB, RB, LP, RP;
 
 
 Axiom ::= KlassMain:km KlassList:kl							{: RESULT = new Axiom(km, kl); RESULT.addPosition(kmxleft, klxright); :};
