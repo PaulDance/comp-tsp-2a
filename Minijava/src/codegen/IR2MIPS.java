@@ -178,6 +178,8 @@ public class IR2MIPS {
 		this.push("$a0");
 		
 		this.regLoad(r0, qNewArray.arg2);
+		this.mips.inst("bltz " + r0 + ", _neg_array_size_exc");	// Enforce positive array sizes.
+		
 		this.mips.move("$v1", r0);
 		this.mips.add("$a0", r0, 1);							// Get and compute the number of bytes,
 		this.mips.fois4("$a0");
