@@ -53,10 +53,7 @@ public class LinkRuntime {
 		mips.inst(".asciiz \"ArrayIndexOutOfBoundsException\"");
 		mips.inst(".text");
 		mips.inst("la   $a0, _aioobe_err_msg");
-		mips.load("$v0", 4);
-		mips.inst("syscall");
-		mips.load("$v0", 10);
-		mips.inst("syscall");
+		mips.jump("_print_exc_str_and_sysexit");
 		
 		// New array negative size exception
 		mips.label("_neg_array_size_exc");
@@ -65,6 +62,10 @@ public class LinkRuntime {
 		mips.inst(".asciiz \"NegativeArraySizeException\"");
 		mips.inst(".text");
 		mips.inst("la   $a0, _nase_err_msg");
+		mips.jump("_print_exc_str_and_sysexit");
+		
+		// Print exception message and system exit
+		mips.label("_print_exc_str_and_sysexit");
 		mips.load("$v0", 4);
 		mips.inst("syscall");
 		mips.load("$v0", 10);
