@@ -134,9 +134,8 @@ public class IR2MIPS {
 		this.regLoad(r0, qAssignArrayFrom.arg1);				// Address of the array.
 		this.regLoad(r1, qAssignArrayFrom.arg2);				// Index of the element.
 		
-		this.mips.add("$v1", r1, 1);
-		this.mips.fois4("$v1");									// Compute the address of the element.
-		this.mips.add("$v1", "$v1", r0);
+		this.mips.checkArrayIndexInBounds(r1, r0);
+		this.mips.arrayIndexToAddr("$v1", r1, r0);
 		
 		this.mips.load("$v0", 0, "$v1");
 		this.regStore("$v0", qAssignArrayFrom.result);			// Return the result value.
@@ -145,16 +144,15 @@ public class IR2MIPS {
 	void visit(QAssignArrayTo qAssignArrayTo) {
 		final String r1 = this.virtReg(qAssignArrayTo.result, "$v1"),
 					r0 = this.virtReg(qAssignArrayTo.arg1, "$v0"),
-					r2 = this.virtReg(qAssignArrayTo.arg2, "$t0");
+					r2 = this.virtReg(qAssignArrayTo.arg2, "$s0");
 		this.regLoad(r1, qAssignArrayTo.result);				// Address of the array.
 		this.regLoad(r0, qAssignArrayTo.arg1);					// Element to assign.
 		this.regLoad(r2, qAssignArrayTo.arg2);					// Index of the array element.
 		
-		this.mips.add("$t0", r2, 1);
-		this.mips.fois4("$t0");									// Compute the address of the element.
-		this.mips.add("$t0", r1);
+		this.mips.checkArrayIndexInBounds(r2, r1);
+		this.mips.arrayIndexToAddr("$s0", r2, r1);
 		
-		this.mips.store(r0, 0, "$t0");							// Return the result value.
+		this.mips.store(r0, 0, "$s0");							// Return the result value.
 	}
 	
 	void visit(QLength qLength) {

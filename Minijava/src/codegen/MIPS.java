@@ -183,7 +183,7 @@ public class MIPS {
 	}
 	
 	public void add(String resReg, String r0, int immediate) {
-		this.inst("addi " + r0 + ", " + r0 + ", " + immediate);
+		this.inst("addi " + resReg + ", " + r0 + ", " + immediate);
 	}
 	
 	public void fois4(String r0) {
@@ -192,5 +192,28 @@ public class MIPS {
 	
 	public void fois4(String resReg, String r0) {
 		this.inst("sll  " + resReg + ", " + r0 + ", 2");
+	}
+	
+	/**
+	 * Produces the three MIPS instruction that transform an array index
+	 * to a usable heap memory address.
+	 *  
+	 * @param resReg The result register: where should the result be stored in.
+	 * @param elIndexReg The register storing the index of the element.
+	 * @param arrayAddrReg The register storing the array's memory address.
+	 */
+	public void arrayIndexToAddr(String resReg, String elIndexReg, String arrayAddrReg) {
+		this.add(resReg, elIndexReg, 1);
+		this.fois4(resReg);
+		this.add(resReg, resReg, arrayAddrReg);
+	}
+	
+	public void checkArrayIndexInBounds(String elIndexReg, String arrayAddrReg) {
+		this.load("$t0", 0, arrayAddrReg);
+		this.add("$t1", elIndexReg, 1);
+		this.inst("sltu $t2, $zero, $t1");
+		this.inst("sltu $t3, " + elIndexReg + ", $t0");
+		this.inst("and  $t4, $t2, $t3");
+		this.jump("_array_index_out_of_bounds_exc", "$t4");
 	}
 }
