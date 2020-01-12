@@ -64,8 +64,22 @@ public class LinkRuntime {
 		mips.inst("la   $a0, _nase_err_msg");
 		mips.jump("_print_exc_str_and_sysexit");
 		
+		// Print exception messages common part
+		mips.label("_print_exc_common_part");
+		mips.inst(".data");
+		mips.label("_err_msg_hd");
+		mips.inst(".asciiz \"Minijava runtime exception: \"");
+		mips.inst(".text");
+		mips.inst("la   $a0, _err_msg_hd");
+		mips.load("$v0", 4);
+		mips.inst("syscall");
+		mips.retour();
+		
 		// Print exception message and system exit
 		mips.label("_print_exc_str_and_sysexit");
+		mips.move("$s0", "$a0");
+		mips.jumpAdr("_print_exc_common_part");
+		mips.move("$a0", "$s0");
 		mips.load("$v0", 4);
 		mips.inst("syscall");
 		mips.load("$v0", 10);
