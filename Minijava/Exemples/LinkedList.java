@@ -85,7 +85,7 @@ class List {
 	boolean end;
 	
 	// Initialize the node list as the last node
-	public boolean Init() {
+	public boolean InitList() {
 		end = true;
 		return true;
 	}
@@ -233,9 +233,9 @@ class LL {
 		Element el03;
 		
 		last_elem = new List();
-		aux01 = last_elem.Init();
+		aux01 = last_elem.InitList();
 		head = last_elem;
-		aux01 = head.Init();
+		aux01 = head.InitList();
 		aux01 = head.Print();
 		
 		// inserting first element
