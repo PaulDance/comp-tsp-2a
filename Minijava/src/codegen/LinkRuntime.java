@@ -50,7 +50,7 @@ public class LinkRuntime {
 		mips.label("_array_index_out_of_bounds_exc");
 		mips.inst(".data");
 		mips.label("_err_msg");
-		mips.inst(".asciiz \"OutOfBoundsException\"");
+		mips.inst(".asciiz \"ArrayIndexOutOfBoundsException\0\"");
 		mips.inst(".text");
 		mips.inst("la   $a0, _err_msg");
 		mips.load("$v0", 4);
