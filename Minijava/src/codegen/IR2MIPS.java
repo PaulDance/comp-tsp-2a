@@ -91,8 +91,10 @@ public class IR2MIPS {
 	}
 	
 	void visit(QCopy qCopy) {
-		this.regLoad("$v0", qCopy.arg1);
-		this.regStore("$v0", qCopy.result);
+		final String r0 = this.virtReg(qCopy.arg1, "$v0");
+		this.regLoad(r0, qCopy.arg1);
+		
+		this.regStore(r0, qCopy.result);
 	}
 	
 	void visit(QJump qJump) {
@@ -100,52 +102,66 @@ public class IR2MIPS {
 	}
 	
 	void visit(QJumpCond qJumpCond) {
-		this.regLoad("$v0", qJumpCond.arg2);
-		this.mips.jump(qJumpCond.arg1.getName(), "$v0");
+		final String r0 = this.virtReg(qJumpCond.arg2, "$v0");
+		this.regLoad(r0, qJumpCond.arg2);
+		
+		this.mips.jump(qJumpCond.arg1.getName(), r0);
 	}
 	
 	void visit(QAssignUnary qAssignUnary) {
-		this.regLoad("$v0", qAssignUnary.arg1);
-		this.mips.oper("$v0", qAssignUnary.op);
+		final String r0 = this.virtReg(qAssignUnary.arg1, "$v0");
+		this.regLoad(r0, qAssignUnary.arg1);
+		
+		this.mips.oper("$v0", r0, qAssignUnary.op);
 		this.regStore("$v0", qAssignUnary.result);
 	}
 	
 	void visit(QAssign qAssign) {
-		this.regLoad("$v0", qAssign.arg1);
-		this.regLoad("$v1", qAssign.arg2);
+		final String r0 = this.virtReg(qAssign.arg1, "$v0"),
+					r1 = this.virtReg(qAssign.arg2, "$v1");
 		
-		this.mips.oper("$v0", qAssign.op, "$v1");
+		this.regLoad(r0, qAssign.arg1);
+		this.regLoad(r1, qAssign.arg2);
+		
+		this.mips.oper("$v0", r0, qAssign.op, r1);
 		
 		this.regStore("$v0", qAssign.result);
 	}
 	
 	void visit(QAssignArrayFrom qAssignArrayFrom) {
-		this.regLoad("$v0", qAssignArrayFrom.arg1);				// Address of the array.
-		this.regLoad("$v1", qAssignArrayFrom.arg2);				// Index of the element.
+		final String r0 = this.virtReg(qAssignArrayFrom.arg1, "$v0"),
+					r1 = this.virtReg(qAssignArrayFrom.arg2, "$v1");
+		this.regLoad(r0, qAssignArrayFrom.arg1);				// Address of the array.
+		this.regLoad(r1, qAssignArrayFrom.arg2);				// Index of the element.
 		
-		this.mips.add("$v1", 1);
+		this.mips.add("$v1", r1, 1);
 		this.mips.fois4("$v1");									// Compute the address of the element.
-		this.mips.add("$v1", "$v0");
+		this.mips.add("$v1", "$v1", r0);
 		
 		this.mips.load("$v0", 0, "$v1");
 		this.regStore("$v0", qAssignArrayFrom.result);			// Return the result value.
 	}
 	
 	void visit(QAssignArrayTo qAssignArrayTo) {
-		this.regLoad("$v1", qAssignArrayTo.result);				// Address of the array.
-		this.regLoad("$v0", qAssignArrayTo.arg1);				// Element to assign.
-		this.regLoad("$t0", qAssignArrayTo.arg2);				// Index of the array element.
+		final String r1 = this.virtReg(qAssignArrayTo.result, "$v1"),
+					r0 = this.virtReg(qAssignArrayTo.arg1, "$v0"),
+					r2 = this.virtReg(qAssignArrayTo.arg2, "$t0");
+		this.regLoad(r1, qAssignArrayTo.result);				// Address of the array.
+		this.regLoad(r0, qAssignArrayTo.arg1);					// Element to assign.
+		this.regLoad(r2, qAssignArrayTo.arg2);					// Index of the array element.
 		
-		this.mips.add("$t0", 1);
+		this.mips.add("$t0", r2, 1);
 		this.mips.fois4("$t0");									// Compute the address of the element.
-		this.mips.add("$t0", "$v1");
+		this.mips.add("$t0", r1);
 		
-		this.mips.store("$v0", 0, "$t0");						// Return the result value.
+		this.mips.store(r0, 0, "$t0");							// Return the result value.
 	}
 	
 	void visit(QLength qLength) {
-		this.regLoad("$v0", qLength.arg1);
-		this.mips.load("$v0", 0, "$v0");
+		final String r0 = this.virtReg(qLength.arg1, "$v0");
+		this.regLoad(r0, qLength.arg1);
+		
+		this.mips.load("$v0", 0, r0);
 		this.regStore("$v0", qLength.result);
 	}
 	
@@ -160,11 +176,12 @@ public class IR2MIPS {
 	}
 	
 	void visit(QNewArray qNewArray) {
+		final String r0 = this.virtReg(qNewArray.arg2, "$a0");
 		this.push("$a0");
 		
-		this.regLoad("$a0", qNewArray.arg2);
-		this.mips.move("$v1", "$a0");
-		this.mips.add("$a0", 1);								// Get and compute the number of bytes,
+		this.regLoad(r0, qNewArray.arg2);
+		this.mips.move("$v1", r0);
+		this.mips.add("$a0", r0, 1);							// Get and compute the number of bytes,
 		this.mips.fois4("$a0");
 		
 		this.mips.jumpAdr("_new_object");
@@ -241,6 +258,11 @@ public class IR2MIPS {
 	
 	
 	// Register helpers: Load and Store with respect to Variable Access.
+	private String virtReg(IRVar var, String defReg) {
+		String reg = this.allocator.access(var).getRegister();
+		return reg == null ? defReg : reg;
+	}
+	
 	void regLoad(String reg, IRVar v) {
 		this.mips.inst(this.allocator.access(v).load(reg));
 	}
