@@ -221,17 +221,33 @@ public class IR2MIPS {
 		final String functionName = qCall.arg1.getName();
 		final int argsNb = this.checkArgs(qCall);
 		
-		if (argsNb > 4) {
-			throw new CompilerException("IR2MIPS : too many args in method " + functionName);
-		}
-		else if (qCall.result == null) {
+		if (qCall.result == null) {
 			this.specialCall(functionName);
 		}
 		else {
+			int i;
 			this.callerSave();
 			
-			for (int i = 0; i < 4 && i < argsNb; i++) {
+			for (i = 0; i < 4 && i < argsNb; i++) {
 				this.regLoadSaved("$a" + i, this.getArg(i));
+			}
+			
+			if (argsNb > 4) {
+				String r0;
+				this.mips.add("$sp", -4 * (argsNb - 4));
+				
+				for (i = 4; i < argsNb; i++) {
+					r0 = this.virtReg(this.getArg(i), "$v0");
+					
+					if (r0.startsWith("$a")) {
+						this.mips.load("$v0", 4 * (Integer.parseInt(r0.substring(2)) + argsNb - 4), "$sp");
+					}
+					else {
+						this.regLoad("$v0", this.getArg(i));
+					}
+					
+					this.mips.store("$v0", 4 * (i - 4), "$sp");
+				}
 			}
 			
 			this.mips.move("$fp", "$sp");
@@ -240,10 +256,47 @@ public class IR2MIPS {
 			this.mips.jumpAdr(functionName);
 			
 			this.mips.move("$sp", "$fp");
+			
+			if (argsNb > 4) {
+				this.mips.add("$sp", 4 * (argsNb - 4));
+			}
+			
 			this.callerRestore();
 			this.regStore("$v0", qCall.result);
 		}
 	}
+	
+	/**
+	 * <b>QCall :</b> <br>
+	 * result = call arg1 [numParams=arg2]
+	 */
+//	void visit(QCall qCall) {
+//		final String functionName = qCall.arg1.getName();
+//		final int argsNb = this.checkArgs(qCall);
+//		
+//		if (argsNb > 4) {
+//			throw new CompilerException("IR2MIPS : too many args in method " + functionName);
+//		}
+//		else if (qCall.result == null) {
+//			this.specialCall(functionName);
+//		}
+//		else {
+//			this.callerSave();
+//			
+//			for (int i = 0; i < 4 && i < argsNb; i++) {
+//				this.regLoadSaved("$a" + i, this.getArg(i));
+//			}
+//			
+//			this.mips.move("$fp", "$sp");
+//			this.mips.add("$sp", -this.allocator.frameSize(functionName));
+//			
+//			this.mips.jumpAdr(functionName);
+//			
+//			this.mips.move("$sp", "$fp");
+//			this.callerRestore();
+//			this.regStore("$v0", qCall.result);
+//		}
+//	}
 	
 	void visit(QReturn qReturn) {
 		this.calleeOut();
