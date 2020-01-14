@@ -1,5 +1,335 @@
-class Test101 {
-  public static void main(String[] args) {
-    System.out.println(42);
-  }
+class Main {
+	public static void main(String[] args) {
+		System.out.println(999999);										// More than 4 arguments example
+		System.out.println(new TestArgs().f(4, 1, 2, 3, 4));			// 10
+		
+		System.out.println(999999);										// Factorial of 10 example
+		System.out.println(new Fac().ComputeFac(10));					// 3 628 800
+		
+		System.out.println(999999);										// Ackermann of (3, 2) example
+		System.out.println(new AckermannFunction().Ackermann(3, 2));	// 29
+		
+		System.out.println(999999);
+		System.out.println(new ForTwo().go());							// MiniBig example
+		
+		System.out.println(999999);
+		System.out.println(new QS().Start(10));							// QuickSort example
+	}
+}
+
+
+class ForTwo {
+	public int go() {
+		BigNum a;
+		BigNum b;
+		BigNum c;
+		BigNum d;
+		
+		a = new BigNum().pre(515).pre(817).pre(145).pre(758).pre(435).pre(80);
+		b = new BigNum().pre(631).pre(335).pre(297).pre(123).pre(602).pre(12);
+		c = new BigNum().pre(974).pre(75).pre(812).pre(738).pre(538).pre(80);
+		d = a.mult(a).mult(a).add(b.mult(b).mult(b)).sub(c.mult(c).mult(c)).print();
+		
+		return 0;
+	}
+}
+
+
+class BigNum {
+	int size;
+	int[] number;
+	int retenu;
+	
+	public int size() {
+		return size;
+	}
+	
+	public int[] number() {
+		return number;
+	}
+	
+	public BigNum pre(int digit) { // prepend : this += digit*1000^size
+		if (size < 1)
+			number = new int[24];
+		
+		number[size] = digit;
+		size = size + 1;
+		return this;
+	}
+	
+	public BigNum reduce() {// suppress zeros
+		while ((1 < size) && (number[size - 1] < 1))
+			size = size - 1;
+		
+		return this;
+	}
+	
+	public BigNum print() {
+		System.out.println(888888);
+		int i;
+		i = 0;
+		
+		while (i < size) {
+			i = i + 1;
+			System.out.println(number[size - i]);
+		}
+		
+		System.out.println(888888);
+		return this;
+	}
+	
+	public int euclide(int i) { // division euclidienne très naive
+		retenu = 0;
+		
+		while (999 < i) {
+			i = i - 1000;
+			retenu = retenu + 1;
+		}
+		
+		while (i < 0) {
+			i = i + 1000;
+			retenu = retenu - 1;
+		}
+		
+		return i;
+	}
+	
+	public BigNum add(BigNum bn) {
+		BigNum retour;
+		retour = new BigNum();
+		
+		int i;
+		i = 0;
+		
+		retenu = 0;
+		
+		int[] bnum;
+		bnum = bn.number();
+		
+		int maxsize;
+		maxsize = bn.size();
+		
+		if (maxsize < size)
+			maxsize = size;
+		
+		while (i < maxsize) {
+			retour = retour.pre(this.euclide(number[i] + bnum[i] + retenu));
+			i = i + 1;
+		}
+		
+		return retour.pre(retenu).reduce();
+	}
+	
+	public BigNum sub(BigNum bn) {
+		BigNum retour;
+		retour = new BigNum();
+		
+		int i;
+		i = 0;
+		
+		retenu = 0;
+		
+		int[] bnum;
+		bnum = bn.number();
+		
+		while (i < size) {
+			retour = retour.pre(this.euclide(number[i] - bnum[i] + retenu));
+			i = i + 1;
+		}
+		
+		return retour.reduce();
+	}
+	
+	public BigNum mult(BigNum bn) {
+		BigNum temp;
+		BigNum retour;
+		retour = new BigNum().pre(0);
+		
+		int i;
+		int j;
+		i = 0;
+		
+		int[] bnum;
+		bnum = bn.number();
+		
+		while (i < bn.size()) {
+			j = 0;
+			retenu = 0;
+			temp = new BigNum();
+			
+			while (j < i) {
+				temp = temp.pre(0);
+				j = j + 1;
+			}
+			
+			j = 0;
+			
+			while (j < size) {
+				temp = temp.pre(this.euclide(number[j] * bnum[i] + retenu));
+				j = j + 1;
+			}
+			
+			retour = retour.add(temp.pre(retenu));
+			i = i + 1;
+		}
+		
+		return retour;
+	}
+}
+
+
+class QS {
+	int[] number;
+	int size;
+	
+	// Invoke the Initialization, Sort and Printing
+	// Methods
+	public int Start(int sz) {
+		int aux01;
+		aux01 = this.Init(sz);
+		aux01 = this.Print();
+		System.out.println(9999);
+		aux01 = size - 1;
+		aux01 = this.Sort(0, aux01);
+		aux01 = this.Print();
+		return 0;
+	}
+	
+	// Sort array of integers using Quicksort method
+	public int Sort(int left, int right) {
+		int v;
+		int i;
+		int j;
+		int nt;
+		int t;
+		boolean cont01;
+		boolean cont02;
+		int aux03;
+		t = 0;
+		if (left < right) {
+			v = number[right];
+			i = left - 1;
+			j = right;
+			cont01 = true;
+			while (cont01) {
+				cont02 = true;
+				while (cont02) {
+					i = i + 1;
+					aux03 = number[i];
+					if (!(aux03 < v))
+						cont02 = false;
+					else
+						cont02 = true;
+				}
+				cont02 = true;
+				while (cont02) {
+					j = j - 1;
+					aux03 = number[j];
+					if (!(v < aux03))
+						cont02 = false;
+					else
+						cont02 = true;
+				}
+				
+				t = number[i];
+				number[i] = number[j];
+				number[j] = t;
+				// aux03 = i + 1 ;
+				if (j < (i + 1))
+					cont01 = false;
+				else
+					cont01 = true;
+			}
+			number[j] = number[i];
+			number[i] = number[right];
+			number[right] = t;
+			nt = this.Sort(left, i - 1);
+			nt = this.Sort(i + 1, right);
+		}
+		else
+			nt = 0;
+		return 0;
+	}
+	
+	// Print array of integers
+	public int Print() {
+		int j;
+		j = 0;
+		
+		while (j < (size)) {
+			System.out.println(number[j]);
+			j = j + 1;
+		}
+		
+		return 0;
+	}
+	
+	// Initialize array of integers
+	public int Init(int sz) {
+		size = sz;
+		number = new int[sz];
+		
+		number[0] = 20;
+		number[1] = 7;
+		number[2] = 12;
+		number[3] = 18;
+		number[4] = 2;
+		number[5] = 11;
+		number[6] = 6;
+		number[7] = 9;
+		number[8] = 19;
+		number[9] = 5;
+		
+		return 0;
+	}
+}
+
+
+
+class TestArgs {
+	public int f(int a, int b, int c, int d, int e) {
+		int res;
+		
+		if (a < 1) {
+			res = 0;
+		}
+		else {
+			res = e + this.f(a - 1, e, b, c, d);
+		}
+		
+		return res;
+	}
+}
+
+
+class Fac {
+	public int ComputeFac(int num) {
+		int num_aux;
+		
+		if (num < 1)
+			num_aux = 1;
+		else
+			num_aux = num * (this.ComputeFac(num - 1));
+		
+		return num_aux;
+	}
+}
+
+
+class AckermannFunction {
+	public int Ackermann(int m, int n) {
+		int resu;
+		
+		if ((0 < m) && (0 < n)) {
+			resu = this.Ackermann(m - 1, this.Ackermann(m, n - 1));
+		}
+		else if (!(0 < n)) {
+			resu = this.Ackermann(m - 1, 1);
+		}
+		else {
+			resu = n + 1;
+		}
+		
+		return resu;
+	}
 }
