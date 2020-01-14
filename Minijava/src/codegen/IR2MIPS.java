@@ -266,38 +266,6 @@ public class IR2MIPS {
 		}
 	}
 	
-	/**
-	 * <b>QCall :</b> <br>
-	 * result = call arg1 [numParams=arg2]
-	 */
-//	void visit(QCall qCall) {
-//		final String functionName = qCall.arg1.getName();
-//		final int argsNb = this.checkArgs(qCall);
-//		
-//		if (argsNb > 4) {
-//			throw new CompilerException("IR2MIPS : too many args in method " + functionName);
-//		}
-//		else if (qCall.result == null) {
-//			this.specialCall(functionName);
-//		}
-//		else {
-//			this.callerSave();
-//			
-//			for (int i = 0; i < 4 && i < argsNb; i++) {
-//				this.regLoadSaved("$a" + i, this.getArg(i));
-//			}
-//			
-//			this.mips.move("$fp", "$sp");
-//			this.mips.add("$sp", -this.allocator.frameSize(functionName));
-//			
-//			this.mips.jumpAdr(functionName);
-//			
-//			this.mips.move("$sp", "$fp");
-//			this.callerRestore();
-//			this.regStore("$v0", qCall.result);
-//		}
-//	}
-	
 	void visit(QReturn qReturn) {
 		this.calleeOut();
 		this.regLoad("$v0", qReturn.arg1);
