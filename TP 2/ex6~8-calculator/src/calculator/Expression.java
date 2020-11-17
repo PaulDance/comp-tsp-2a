@@ -5,12 +5,12 @@ import ast.ASTVisitor;
 
 
 public abstract class Expression extends ASTNode {
-	public Expression(Expression... fils) {
-		super(fils);
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {}
-	
-	public abstract Double evaluate();
+    public Expression(final Expression... fils) {
+        super(fils);
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {}
+
+    public abstract Double evaluate();
 }
