@@ -1,10 +1,15 @@
-Yylex.java
-sym.java
-parser.java
+# JFlex and Cup.
+**/Yylex.java
+**/sym.java
+**/parser.java
 
-*.class
-*.out
-*.mips
+# Java and other outputs.
+**/*.class
+**/*.out
+**/*.mips
 
-*.swp
-
+# Editor files
+**/*.swp
+**/.project
+**/.classpath
+**/.settings/
