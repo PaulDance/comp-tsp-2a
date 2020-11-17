@@ -5,12 +5,12 @@ package intermediate.ir;
  * Return arg1
  */
 public class QReturn extends IRQuadruple {
-	public QReturn(IRVar arg1) {
-		super(null, arg1, null, null);
-	}
-	
-	@Override
-	public String toString() {
-		return "return " + this.arg1.getName();
-	}
+    public QReturn(final IRVar arg1) {
+        super(null, arg1, null, null);
+    }
+
+    @Override
+    public String toString() {
+        return "return " + this.arg1.getName();
+    }
 }

@@ -16,48 +16,48 @@ import java.util.Collection;
  * Le scope de la classe est fils du scope de la déclaration de classe
  */
 public class InfoKlass implements Info {
-	private final String name;
-	private final String parent;
-	/** link to Klass attributes : fields, methods */
-	private Scope scope;
-	
-	// getters
-	public String getName() {
-		return this.name;
-	}
-	
-	public String getParent() {
-		return this.parent;
-	}
-	
-	public Scope getScope() {
-		return this.scope;
-	}
-	
-	// setter
-	public void setScope(Scope scope) {
-		this.scope = scope;
-	}
-	
-	// helpers
-	public Collection<InfoMethod> getMethods() {
-		return this.scope.getMethods();
-	}
-	
-	public Collection<InfoVar> getFields() {
-		return this.scope.getVariables();
-	}
-	
-	// constructor
-	public InfoKlass(String name, String parentName) {
-		this.name = name;
-		this.parent = parentName;
-		this.scope = null;
-	}
-	
-	// print
-	@Override
-	public String toString() {
-		return "class " + this.name + " extends " + this.parent;
-	}
+    private final String name;
+    private final String parent;
+    /** link to Klass attributes : fields, methods */
+    private Scope scope;
+
+    // getters
+    public String getName() {
+        return this.name;
+    }
+
+    public String getParent() {
+        return this.parent;
+    }
+
+    public Scope getScope() {
+        return this.scope;
+    }
+
+    // setter
+    public void setScope(final Scope scope) {
+        this.scope = scope;
+    }
+
+    // helpers
+    public Collection<InfoMethod> getMethods() {
+        return this.scope.getMethods();
+    }
+
+    public Collection<InfoVar> getFields() {
+        return this.scope.getVariables();
+    }
+
+    // constructor
+    public InfoKlass(final String name, final String parentName) {
+        this.name = name;
+        this.parent = parentName;
+        this.scope = null;
+    }
+
+    // print
+    @Override
+    public String toString() {
+        return "class " + this.name + " extends " + this.parent;
+    }
 }

@@ -8,19 +8,19 @@ package syntax.ast;
  * {@link #args}
  */
 public class ExprCall extends Expr {
-	public final Expr receiver;
-	public final Ident methodId;
-	public final ASTList<Expr> args;
-	
-	public ExprCall(Expr receiver, Ident methodId, ASTList<Expr> args) {
-		super(receiver, methodId, args);
-		this.receiver = receiver;
-		this.methodId = methodId;
-		this.args = args;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final Expr receiver;
+    public final Ident methodId;
+    public final ASTList<Expr> args;
+
+    public ExprCall(final Expr receiver, final Ident methodId, final ASTList<Expr> args) {
+        super(receiver, methodId, args);
+        this.receiver = receiver;
+        this.methodId = methodId;
+        this.args = args;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

@@ -6,24 +6,24 @@ package syntax.ast;
  * {@link #value}
  */
 public class ExprLiteralInt extends Expr {
-	public final Integer value;
-	
-	public ExprLiteralInt(Integer value) {
-		this.value = value;
-	}
-	
-	/** Constructeur altérnatif */
-	public ExprLiteralInt(String s) {
-		this.value = Integer.parseInt(s);
-	}
-	
-	@Override
-	public String toString() {
-		return super.toString() + " " + this.value;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final Integer value;
+
+    public ExprLiteralInt(final Integer value) {
+        this.value = value;
+    }
+
+    /** Constructeur altérnatif */
+    public ExprLiteralInt(final String s) {
+        this.value = Integer.parseInt(s);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + this.value;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

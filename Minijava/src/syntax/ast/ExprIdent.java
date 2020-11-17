@@ -6,15 +6,15 @@ package syntax.ast;
  * {@link #varId}
  */
 public class ExprIdent extends Expr {
-	public final Ident varId;
-	
-	public ExprIdent(Ident varId) {
-		super(varId);
-		this.varId = varId;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final Ident varId;
+
+    public ExprIdent(final Ident varId) {
+        super(varId);
+        this.varId = varId;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

@@ -7,19 +7,19 @@ package syntax.ast;
  * {@link #varId}
  */
 public class Formal extends ASTNode {
-	/** Nom de Type */
-	public final Type typeId;
-	/** Nom de Variable */
-	public final Ident varId;
-	
-	public Formal(Type typeId, Ident varId) {
-		super(typeId, varId);
-		this.typeId = typeId;
-		this.varId = varId;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    /** Nom de Type */
+    public final Type typeId;
+    /** Nom de Variable */
+    public final Ident varId;
+
+    public Formal(final Type typeId, final Ident varId) {
+        super(typeId, varId);
+        this.typeId = typeId;
+        this.varId = varId;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

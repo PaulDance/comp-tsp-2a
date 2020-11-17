@@ -7,19 +7,19 @@ package syntax.ast;
  * {@link #klassList}
  */
 public class Axiom extends ASTNode {
-	/** Classe conventionnelle main() */
-	public final KlassMain klassMain;
-	/** Liste des autres classes */
-	public final ASTList<Klass> klassList;
-	
-	public Axiom(KlassMain klassMain, ASTList<Klass> klassList) {
-		super(klassMain, klassList);
-		this.klassMain = klassMain;
-		this.klassList = klassList;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    /** Classe conventionnelle main() */
+    public final KlassMain klassMain;
+    /** Liste des autres classes */
+    public final ASTList<Klass> klassList;
+
+    public Axiom(final KlassMain klassMain, final ASTList<Klass> klassList) {
+        super(klassMain, klassList);
+        this.klassMain = klassMain;
+        this.klassList = klassList;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

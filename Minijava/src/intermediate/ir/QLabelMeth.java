@@ -6,13 +6,13 @@ package intermediate.ir;
  * Label for method
  */
 public class QLabelMeth extends IRQuadruple {
-	public QLabelMeth(IRVar arg1) {
-		super(null, arg1, null, null);
-	}
-	
-	@Override
-	public String toString() {
-		return this.arg1.getName() + ":";
-	}
-	
+    public QLabelMeth(final IRVar arg1) {
+        super(null, arg1, null, null);
+    }
+
+    @Override
+    public String toString() {
+        return this.arg1.getName() + ":";
+    }
+
 }

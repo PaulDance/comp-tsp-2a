@@ -7,17 +7,17 @@ package syntax.ast;
  * {@link #index}
  */
 public class ExprArrayLookup extends Expr {
-	public final Expr array;
-	public final Expr index;
-	
-	public ExprArrayLookup(Expr array, Expr index) {
-		super(array, index);
-		this.array = array;
-		this.index = index;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final Expr array;
+    public final Expr index;
+
+    public ExprArrayLookup(final Expr array, final Expr index) {
+        super(array, index);
+        this.array = array;
+        this.index = index;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

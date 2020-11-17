@@ -6,15 +6,15 @@ package syntax.ast;
  * {@link #klassId}
  */
 public class ExprNew extends Expr {
-	public final Ident klassId;
-	
-	public ExprNew(Ident klassId) {
-		super(klassId);
-		this.klassId = klassId;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final Ident klassId;
+
+    public ExprNew(final Ident klassId) {
+        super(klassId);
+        this.klassId = klassId;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

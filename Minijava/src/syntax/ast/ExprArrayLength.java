@@ -6,15 +6,15 @@ package syntax.ast;
  * {@link #array}
  */
 public class ExprArrayLength extends Expr {
-	public final Expr array;
-	
-	public ExprArrayLength(Expr array) {
-		super(array);
-		this.array = array;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final Expr array;
+
+    public ExprArrayLength(final Expr array) {
+        super(array);
+        this.array = array;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }

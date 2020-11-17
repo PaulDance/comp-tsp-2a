@@ -18,17 +18,17 @@ import syntax.ast.ASTNode;
  * </ul>
  */
 public class SemanticAttribut<R> {
-	private final Map<ASTNode, R> attribut;
-	
-	public SemanticAttribut() {
-		this.attribut = new HashMap<>();
-	}
-	
-	public R get(ASTNode node) {
-		return this.attribut.get(node);
-	}
-	
-	public R set(ASTNode node, R attr) {
-		return this.attribut.put(node, attr);
-	}
+    private final Map<ASTNode, R> attribut;
+
+    public SemanticAttribut() {
+        this.attribut = new HashMap<>();
+    }
+
+    public R get(final ASTNode node) {
+        return this.attribut.get(node);
+    }
+
+    public R set(final ASTNode node, final R attr) {
+        return this.attribut.put(node, attr);
+    }
 }

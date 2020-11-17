@@ -6,19 +6,19 @@ package syntax.ast;
  * {@link #name}
  */
 public class Ident extends ASTNode {
-	public final String name;
-	
-	public Ident(String name) {
-		this.name = name;
-	}
-	
-	@Override
-	public String toString() {
-		return super.toString() + " " + this.name;
-	}
-	
-	@Override
-	public void accept(ASTVisitor v) {
-		v.visit(this);
-	}
+    public final String name;
+
+    public Ident(final String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " " + this.name;
+    }
+
+    @Override
+    public void accept(final ASTVisitor v) {
+        v.visit(this);
+    }
 }
